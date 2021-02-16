@@ -27,7 +27,7 @@ contract Item {
     /** 
      * @dev Create a new ballot to choose one of 'proposalNames'.
      * @param _itemId unique identifier of the item  
-     * @param _isoCurrency currency that will be used for a price of the item
+     * @param _isoCurrency currency that will be used for a price of the item (ISO-4127)
      * @param _name name of the item
      */
     constructor(Store _storeContract, uint256 _itemId, uint256 _isoCurrency, string memory _name, uint _price) {
@@ -38,6 +38,10 @@ contract Item {
         _addNewPrice(_price, msg.sender);
     }
     
+    /**
+     * @dev Modifier that allows only admins of a store to update a price for an item under that store.
+     * @param _address address of a user that is trying to update the price.
+     */
     modifier ownerOrAllowed(address _address){
         //Only owner or person who is given allowance (and has positive balance) can withdraw the money
         require(parentContract.isAdmin(_address), "You are not allowed to update the price of the item! Only admins of the store can update the price!");
@@ -63,10 +67,18 @@ contract Item {
         _addNewPrice(_amount, _sender);
     }
     
+    /**
+     * @dev Number of price changes for this item (number of Price records).
+     */
     function numberOfPriceChanges() public view returns(uint256) {
         return numOfPriceChanges;
     }
     
+    
+    /**
+     * @dev Returns the price record (unpacked into a tuple) at selected index.
+     * @param _index of the price record
+     */
     function getPriceAtIndex(uint256 _index) public view returns(uint256, uint256, address) {
         require(_index < numOfPriceChanges, "There is no price entry with specified index.");
         return (prices[_index].amount, prices[_index].timestamp, prices[_index].updatedUser);
