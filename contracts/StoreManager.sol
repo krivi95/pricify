@@ -22,7 +22,7 @@ contract StoreManager is Ownable {
      * @param _admin address of the store admin
      */
     function createNewStore(string memory _name, address _admin) onlyOwner public {
-        require(address(storeAddressMapping[msg.sender]) == address(0), "You already have created a store! Please call getMyStoreInfo method for more info.");
+        require(address(storeAddressMapping[_admin]) == address(0), "You already have created a store! Please call getMyStoreInfo method for more info.");
         Store store = new Store(numOfStores, _name, _admin);
         storeIdMapping[numOfStores] = store;
         storeAddressMapping[_admin] = store;
@@ -54,7 +54,8 @@ contract StoreManager is Ownable {
      */
     function addAdminToMyStore(address _address) public {
         require(address(storeAddressMapping[msg.sender]) != address(0), "You don't have any store assigned to you!");
-        storeAddressMapping[msg.sender].addAdmin(_address);
+        storeAddressMapping[msg.sender].addAdmin(msg.sender, _address);
+        storeAddressMapping[_address] = storeAddressMapping[msg.sender];
     }
     
     /**
@@ -63,7 +64,7 @@ contract StoreManager is Ownable {
      */
     function removeAdminFromMyStore(address _address) public {
         require(address(storeAddressMapping[msg.sender]) != address(0), "You don't have any store assigned to you!");
-        storeAddressMapping[msg.sender].removeAdmin(_address);
+        storeAddressMapping[msg.sender].removeAdmin(msg.sender, _address);
     }
     
     /**

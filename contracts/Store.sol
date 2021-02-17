@@ -46,18 +46,20 @@ contract Store is AccessControl {
     
     /**
      * @dev Grants admin role to specified address
+     * @param _sender address which invoked this function (should be and admin address) 
      * @param _address which will be granted an admin role
      */
-    function addAdmin(address _address) public onlyStoreAdmin(msg.sender) {
+    function addAdmin(address _sender, address _address) public onlyStoreAdmin(_sender) {
         // require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin of a store");
         _setupRole(ADMIN_ROLE, _address);
     }
     
     /**
      * @dev Revokes admin role from specified address
+     * @param _sender address which invoked this function (should be and admin address) 
      * @param _address which will be revoked an admin role
      */
-    function removeAdmin(address _address) public onlyStoreAdmin(msg.sender) {
+    function removeAdmin(address _sender, address _address) public onlyStoreAdmin(_sender) {
         // require(hasRole(ADMIN_ROLE, msg.sender),"Caller is not an admin of a store");
         revokeRole(ADMIN_ROLE, _address);
     }
