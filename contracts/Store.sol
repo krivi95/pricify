@@ -50,7 +50,6 @@ contract Store is AccessControl {
      * @param _address which will be granted an admin role
      */
     function addAdmin(address _sender, address _address) public onlyStoreAdmin(_sender) {
-        // require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin of a store");
         _setupRole(ADMIN_ROLE, _address);
     }
     
@@ -60,7 +59,6 @@ contract Store is AccessControl {
      * @param _address which will be revoked an admin role
      */
     function removeAdmin(address _sender, address _address) public onlyStoreAdmin(_sender) {
-        // require(hasRole(ADMIN_ROLE, msg.sender),"Caller is not an admin of a store");
         revokeRole(ADMIN_ROLE, _address);
     }
     
@@ -81,7 +79,6 @@ contract Store is AccessControl {
      * @param _price initial price of the item
      */
     function createNewItem(address _address, uint256 _isoCurrency, string memory _name, uint _price) public onlyStoreAdmin(_address) {
-        // require(hasRole(ADMIN_ROLE, _address), "Caller is not an admin of a store");
         Item item = new Item(this, storeInfo.numOfItems, _isoCurrency, _name, _price);
         items[storeInfo.numOfItems] = item;
         storeInfo.numOfItems++;
@@ -94,7 +91,6 @@ contract Store is AccessControl {
      * @param _amount new price
      */
     function updateItemPrice(address _address, uint256 _itemId, uint256 _amount) public onlyStoreAdmin(_address) {
-        // require(hasRole(ADMIN_ROLE, _address), "Caller is not an admin of a store");
         require(_itemId <= storeInfo.numOfItems, "Item with provided id doesn't exist in this store");
         items[_itemId].updatePrice(_amount, _address);
     }
