@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.0;
+pragma solidity >=0.6.0 <0.8.0;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./Item.sol";
 
 /**
@@ -22,14 +22,14 @@ contract Store is AccessControl {
      * @dev Creates new store contract for managing items and prices in a store.
      * @param _admin address taht will be the admin of the store
      */
-    constructor(address _admin){
+    constructor(address _admin) public {
         _setupRole(DEFAULT_ADMIN_ROLE, _admin);
         _setupRole(ADMIN_ROLE, _admin);
     }
     
     /**
      * @dev Grants admin role to specified address
-     * @param _addres which will be granted an admin role
+     * @param _address which will be granted an admin role
      */
     function addAdmin(address _address) public {
         require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin of a store");
@@ -38,7 +38,7 @@ contract Store is AccessControl {
     
     /**
      * @dev Revokes admin role from specified address
-     * @param _addres which will be revoked an admin role
+     * @param _address which will be revoked an admin role
      */
     function removeAdmin(address _address) public {
         require(hasRole(ADMIN_ROLE, msg.sender),"Caller is not an admin of a store");
@@ -47,7 +47,7 @@ contract Store is AccessControl {
     
     /**
      * @dev Checks if the specified role has admin role
-     * @param _addres to verify
+     * @param _address to verify
      */
     function isAdmin(address _address) public view returns(bool) {
         return hasRole(ADMIN_ROLE, _address);

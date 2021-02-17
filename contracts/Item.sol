@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.0;
+pragma solidity >=0.6.0 <0.8.0;
 
 import "./Store.sol";
 
@@ -30,7 +30,7 @@ contract Item {
      * @param _isoCurrency currency that will be used for a price of the item (ISO-4127)
      * @param _name name of the item
      */
-    constructor(Store _storeContract, uint256 _itemId, uint256 _isoCurrency, string memory _name, uint _price) {
+    constructor(Store _storeContract, uint256 _itemId, uint256 _isoCurrency, string memory _name, uint _price) public {
         parentContract = _storeContract;
         itemId = _itemId;
         isoCurrency = _isoCurrency;
