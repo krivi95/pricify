@@ -1,0 +1,25 @@
+{
+  "name": "pricify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krivi95/pricify.git"
+  },
+  "author": "Nikola Krivacevic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krivi95/pricify/issues"
+  },
+  "homepage": "https://github.com/krivi95/pricify#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.4.0"
+  }
+}
