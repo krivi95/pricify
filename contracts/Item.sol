@@ -16,13 +16,27 @@ contract Item {
         uint256 timestamp; //time and date when price was changed
         address updatedUser; //user who updated the price
     }
+    
+    struct ItemInfo {
+        uint256 itemId;
+        uint256 isoCurrency;
+        string name;
+        uint256 lastPrice;
+        uint256 numOfPriceChanges;
+    }
 
-    uint256 public itemId;
-    uint256 public isoCurrency;
-    string public name;
-    mapping(uint256 => Price) prices;
-    uint256 numOfPriceChanges;
+    ItemInfo public itemInfo;
+    mapping(uint256 => Price) public prices;
     Store parentContract;
+    
+    /**
+     * @dev Modifier that allows only admins of a store to update a price for an item under that store.
+     * @param _address address of a user that is trying to update the price.
+     */
+    modifier onlyStoreAdmin(address _address){
+        require(parentContract.isAdmin(_address), "You are not allowed to update the price of the item! Only admins of the store can update the price!");
+        _;
+    }
     
     /** 
      * @dev Create a new ballot to choose one of 'proposalNames'.
@@ -32,20 +46,10 @@ contract Item {
      */
     constructor(Store _storeContract, uint256 _itemId, uint256 _isoCurrency, string memory _name, uint _price) public {
         parentContract = _storeContract;
-        itemId = _itemId;
-        isoCurrency = _isoCurrency;
-        name = _name;
+        itemInfo.itemId = _itemId;
+        itemInfo.isoCurrency = _isoCurrency;
+        itemInfo.name = _name;
         _addNewPrice(_price, msg.sender);
-    }
-    
-    /**
-     * @dev Modifier that allows only admins of a store to update a price for an item under that store.
-     * @param _address address of a user that is trying to update the price.
-     */
-    modifier ownerOrAllowed(address _address){
-        //Only owner or person who is given allowance (and has positive balance) can withdraw the money
-        require(parentContract.isAdmin(_address), "You are not allowed to update the price of the item! Only admins of the store can update the price!");
-        _;
     }
     
     /**
@@ -53,17 +57,18 @@ contract Item {
      * @param _amount new price for the item
      */
     function _addNewPrice(uint256 _amount, address _sender) internal {
-        prices[numOfPriceChanges].amount = _amount;
-        prices[numOfPriceChanges].timestamp = block.timestamp;
-        prices[numOfPriceChanges].updatedUser = _sender;
-        numOfPriceChanges++;
+        prices[itemInfo.numOfPriceChanges].amount = _amount;
+        prices[itemInfo.numOfPriceChanges].timestamp = block.timestamp;
+        prices[itemInfo.numOfPriceChanges].updatedUser = _sender;
+        itemInfo.lastPrice = _amount;
+        itemInfo.numOfPriceChanges++;
     }
     
     /**
      * @dev Update the price of the item.
      * @param _amount new price for the item
      */
-    function updatePrice(uint256 _amount, address _sender) ownerOrAllowed(_sender) external {
+    function updatePrice(uint256 _amount, address _sender) onlyStoreAdmin(_sender) external {
         _addNewPrice(_amount, _sender);
     }
     
@@ -71,7 +76,7 @@ contract Item {
      * @dev Number of price changes for this item (number of Price records).
      */
     function numberOfPriceChanges() public view returns(uint256) {
-        return numOfPriceChanges;
+        return itemInfo.numOfPriceChanges;
     }
     
     
@@ -80,7 +85,7 @@ contract Item {
      * @param _index of the price record
      */
     function getPriceAtIndex(uint256 _index) public view returns(uint256, uint256, address) {
-        require(_index < numOfPriceChanges, "There is no price entry with specified index.");
+        require(_index < itemInfo.numOfPriceChanges, "There is no price entry with specified index.");
         return (prices[_index].amount, prices[_index].timestamp, prices[_index].updatedUser);
     }
    
