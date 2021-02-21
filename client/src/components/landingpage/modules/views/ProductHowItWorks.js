@@ -81,7 +81,7 @@ function ProductHowItWorks(props) {
                 <div className={classes.number}>1.</div>
                 <BorderColorIcon fontSize="large" className={classes.image}/>
                 <Typography variant="h5" align="center">
-                When you update the price on the product, that record is sent to the blockchain.
+                When you update the price of the product, that record is sent to the blockchain.
                 </Typography>
               </div>
             </Grid>
@@ -99,7 +99,7 @@ function ProductHowItWorks(props) {
                 <div className={classes.number}>3.</div>
                 <CheckCircleIcon fontSize="large" className={classes.image}/>
                 <Typography variant="h5" align="center">
-                  Users can validate if the discount on on the products is real or not and they could see the whole price history of the product.
+                  Users can validate if the discount on on the products is real or not and they can see the whole price history of the product.
                 </Typography>
               </div>
             </Grid>
