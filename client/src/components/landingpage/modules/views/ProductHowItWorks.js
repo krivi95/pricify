@@ -90,7 +90,7 @@ function ProductHowItWorks(props) {
                 <div className={classes.number}>2.</div>
                 <StorageIcon fontSize="large" className={classes.image}/>
                 <Typography variant="h5" align="center">
-                  The price update record is validated and securely stored on the blockchain where nobody can change it or deleted (including you).
+                  The price update is confirmed by the network and securely stored on the blockchain where nobody can change it or deleted (including you).
                 </Typography>
               </div>
             </Grid>

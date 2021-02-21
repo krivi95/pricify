@@ -79,7 +79,7 @@ function ProductValues(props) {
                   'Being honest with your costumers makes them more likely to stay with you. '
                 }
 
-                {'Loyal customers means higher profits, preditable cash flows and higher conversion rates.'}
+                {'Loyal customers means higher profits, predictable cash flows and higher conversion rates.'}
               </Typography>
             </div>
           </Grid>
