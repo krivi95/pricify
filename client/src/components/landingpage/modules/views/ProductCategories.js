@@ -20,6 +20,10 @@ const styles = (theme) => ({
     alignItems: 'center',
     width: '100%'
   },
+  image: {
+    height: 'auto',
+    maxWidth: '100%',
+  }
 });
 
 function ProductCategories(props) {
@@ -32,6 +36,7 @@ function ProductCategories(props) {
       </Typography>
       <div className={classes.images}>
         <img
+          className={classes.image}
           src={verifyDemo}
           alt="increase priority"
         />
