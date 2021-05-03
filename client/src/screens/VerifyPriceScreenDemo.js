@@ -16,6 +16,7 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '../components/landingpage/modules/components/Typography';
 import AppFooter from '../components/landingpage/modules/views/AppFooter';
 import AppAppBar from '../components/landingpage/modules/views/AppAppBar';
+import withRoot from '../components/landingpage/modules/withRoot';
 
 // Plotly
 import Plot from 'react-plotly.js';
@@ -56,11 +57,11 @@ const styles = (theme) => ({
 });
 
 
-function VerifyPriceScreen(props) {
+function VerifyPriceScreenDemo(props) {
     // material-ui styles
     const { classes } = props;
 
-    // url parameters
+    // Get url parameters
     let { storeId, productId } = useParams();
 
     // hook states
@@ -84,7 +85,7 @@ function VerifyPriceScreen(props) {
         if (currentPrice != null && oldPrice != null) {
             setPriceDifference((100 * (oldPrice - currentPrice) / oldPrice).toFixed(2));
         }
-    });
+    }, [currentPrice, oldPrice]);
 
     function seePriceHistory() {
         setShowPrices(!showPrices);
@@ -188,4 +189,4 @@ function VerifyPriceScreen(props) {
 }
 
 
-export default withStyles(styles)(VerifyPriceScreen);
+export default withRoot(withStyles(styles)(VerifyPriceScreenDemo));

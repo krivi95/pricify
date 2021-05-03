@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ButtonBase from '@material-ui/core/ButtonBase';
 import Container from '@material-ui/core/Container';
 import Typography from '../components/Typography';
 import verifyDemo from '../img/verifyDemo.png'
@@ -17,7 +16,6 @@ const styles = (theme) => ({
     marginTop: theme.spacing(8),
     display: 'flex',
     flexWrap: 'wrap',
-    display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%', 
@@ -47,7 +45,7 @@ function ProductCategories(props) {
           className={classes.image}
           src={verifyDemo}
           alt="increase priority"
-          onClick={() => { history.push("/verify/store-demo/item-demo"); }}
+          onClick={() => { history.push("/demo/verify/store-id/item-id"); }}
         />
       </div>
     </Container>

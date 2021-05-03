@@ -2,13 +2,9 @@
 import React from "react";
 
 // Local ReactJS components
-import LoadContract from "./components/LoadContract";
-//import HomepageScreen from "./screens/HomepageScreen";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
 import AdminHomeScreen from "./screens/AdminHomeScreen";
 import StoreHomeScreen from "./screens/StoreHomeScreen";
-import VerifyPriceScreen from "./screens/VerifyPriceScreen";
+import VerifyPriceScreenDemo from "./screens/VerifyPriceScreenDemo";
 import SignIn from "./components/landingpage/SignIn";
 import SignUp from "./components/landingpage/SignUp";
 
@@ -28,7 +24,7 @@ export default function App() {
         <Route path="/" exact component={Home} />
         <Route path="/login" component={SignIn} />
         <Route path="/register" component={SignUp} />
-        <Route path="/verify/:storeId/:productId" component={VerifyPriceScreen} />
+        <Route path="/demo/verify/:storeId/:productId" component={VerifyPriceScreenDemo} />
         <Route path="/admin" component={AdminHomeScreen} />
         <Route path="/store" component={StoreHomeScreen} />
 

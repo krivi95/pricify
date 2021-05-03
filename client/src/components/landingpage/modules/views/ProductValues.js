@@ -7,7 +7,6 @@ import Typography from '../components/Typography';
 import LoyaltyIcon from '@material-ui/icons/Loyalty';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import WidgetsIcon from '@material-ui/icons/Widgets';
-import productCurvyLines from "../img/productCurvyLines.png";
 import blockchainBackgrround from "../img/polkaDot.png";
 
 const styles = (theme) => ({
