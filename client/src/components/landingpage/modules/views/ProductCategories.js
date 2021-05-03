@@ -6,6 +6,8 @@ import Container from '@material-ui/core/Container';
 import Typography from '../components/Typography';
 import verifyDemo from '../img/verifyDemo.png'
 
+import { useHistory } from "react-router-dom";
+
 const styles = (theme) => ({
   root: {
     marginTop: theme.spacing(8),
@@ -18,16 +20,22 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    width: '100%'
+    width: '100%', 
+    
   },
   image: {
     height: 'auto',
     maxWidth: '100%',
+    '&:hover': {
+      opacity: '0.5',
+      cursor: 'pointer'
+    },
   }
 });
 
 function ProductCategories(props) {
   const { classes } = props;
+  const history = useHistory();
 
   return (
     <Container className={classes.root} component="section">
@@ -39,6 +47,7 @@ function ProductCategories(props) {
           className={classes.image}
           src={verifyDemo}
           alt="increase priority"
+          onClick={() => { history.push("/verify/store-demo/item-demo"); }}
         />
       </div>
     </Container>
