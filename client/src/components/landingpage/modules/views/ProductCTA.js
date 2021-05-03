@@ -8,6 +8,8 @@ import TextField from '../components/TextField';
 import Snackbar from '../components/Snackbar';
 import Button from '../components/Button';
 
+import firebase from '../../../../firebase/firebase'
+
 const styles = (theme) => ({
   root: {
     marginTop: theme.spacing(2),
@@ -40,11 +42,24 @@ const styles = (theme) => ({
 function ProductCTA(props) {
   const { classes } = props;
   const [open, setOpen] = React.useState(false);
+  const [inputData, setInputData] = React.useState({ message: "", email: "", name: "" });
 
   const handleSubmit = (event) => {
+    // Displaying Snackbar message
     event.preventDefault();
     setOpen(true);
+
+    // Submiting data to the Firebase
+    var postListRef = firebase.database().ref('leads');
+    var newPostRef = postListRef.push();
+    newPostRef.set({
+      name: inputData.name,
+      email: inputData.email,
+      message: inputData.message,
+      date: Date().toLocaleString()
+    });
   };
+
 
   const handleClose = () => {
     setOpen(false);
@@ -52,7 +67,7 @@ function ProductCTA(props) {
 
   return (
     <Container className={classes.root} component="section">
-      <Grid container justify = "center">
+      <Grid container justify="center">
         <Grid item xs={12} md={6} className={classes.cardWrapper}>
           <div className={classes.card}>
             <form onSubmit={handleSubmit} className={classes.cardContent}>
@@ -60,10 +75,31 @@ function ProductCTA(props) {
                 We'll get back to you for any questions you may have.
               </Typography>
               <TextField
+                name="name"
+                noBorder
+                className={classes.textField}
+                placeholder="Name"
+                variant="standard"
+                onChange={e => setInputData({ ...inputData, name: e.target.value })}
+              />
+              <TextField
+                name="message"
+                multiline
+                rows={3}
+                noBorder
+                className={classes.textField}
+                placeholder="Message"
+                variant="standard"
+                onChange={e => setInputData({ ...inputData, message: e.target.value })}
+              />
+              <TextField
+                name="email"
                 noBorder
                 className={classes.textField}
                 placeholder="Your email"
                 variant="standard"
+                // onChange={handleInputChange}
+                onChange={e => setInputData({ ...inputData, email: e.target.value })}
               />
               <Button
                 type="submit"
