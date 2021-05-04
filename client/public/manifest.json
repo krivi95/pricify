@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Pricify",
+  "name": "Pricify: transparent prices on blockchain",
   "icons": [
     {
       "src": "favicon.ico",

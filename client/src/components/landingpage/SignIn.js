@@ -1,16 +1,27 @@
-import * as React from 'react';
-import { Field, Form, FormSpy } from 'react-final-form';
-import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
-import Typography from './modules/components/Typography';
-import AppFooter from './modules/views/AppFooter';
-import AppAppBar from './modules/views/AppAppBar';
-import AppForm from './modules/views/AppForm';
-import { email, required } from './modules/form/validation';
-import RFTextField from './modules/form/RFTextField';
-import FormButton from './modules/form/FormButton';
-import FormFeedback from './modules/form/FormFeedback';
-import withRoot from './modules/withRoot';
+// ReactJS components
+import * as React from "react";
+import { useContext } from "react";
+import { Field, Form, FormSpy } from "react-final-form";
+import { useHistory } from "react-router-dom";
+
+// MaterialUI Components
+import { makeStyles } from "@material-ui/core/styles";
+import Link from "@material-ui/core/Link";
+
+// Landing page template components
+import Typography from "./modules/components/Typography";
+import AppFooter from "./modules/views/AppFooter";
+import AppAppBar from "./modules/views/AppAppBar";
+import AppForm from "./modules/views/AppForm";
+import { email, required } from "./modules/form/validation";
+import RFTextField from "./modules/form/RFTextField";
+import FormButton from "./modules/form/FormButton";
+import FormFeedback from "./modules/form/FormFeedback";
+import withRoot from "./modules/withRoot";
+
+// Local ReactJS components
+import { AuthContext } from "../../context/AuthContext";
+import firebase from "../../firebase/firebase";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -28,9 +39,11 @@ const useStyles = makeStyles((theme) => ({
 function SignIn() {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
+  const { currentUser } = useContext(AuthContext);
+  const history = useHistory();
 
   const validate = (values) => {
-    const errors = required(['email', 'password'], values);
+    const errors = required(["email", "password"], values);
 
     if (!errors.email) {
       const emailError = email(values.email);
@@ -42,9 +55,68 @@ function SignIn() {
     return errors;
   };
 
-  const handleSubmit = () => {
-    setSent(true);
+  const firebaseLogin = async (email, password) => {
+    /**
+     * Authenticates user and redirects him to the homepage.
+     */
+
+    try {
+      // Authenticating user with firebase
+      const firebaseUser = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
+
+      // Determining account type
+      let accountType = null;
+      const uid = firebaseUser.user.uid;
+      await firebase
+        .database()
+        .ref("users/" + uid)
+        .once("value", (snap) => {
+          const userData = snap.val();
+          accountType = userData.accountType;
+        });
+
+      if (!accountType) {
+        alert("Couldn't login. Auth service not working!");
+        return;
+      }
+
+      // Redirecting to the user homepage
+      if (accountType == "admin") {
+        history.push("/admin");
+      } else {
+        history.push("/store");
+      }
+    } catch (error) {
+      setSent(false);
+      alert(error);
+    }
   };
+
+  const handleSubmit = async (loginData) => {
+    setSent(true);
+    await firebaseLogin(loginData.email, loginData.password);
+  };
+
+  if (currentUser) {
+    let accountType = null;
+    const uid = currentUser.uid;
+    
+    firebase
+      .database()
+      .ref("users/" + uid)
+      .once("value", (snap) => {
+        const userData = snap.val();
+        accountType = userData.accountType;
+        if (accountType == "admin") {
+          history.push("/admin");
+        } else {
+          history.push("/store");
+        }
+      });
+    
+  }
 
   return (
     <React.Fragment>
@@ -55,12 +127,8 @@ function SignIn() {
             Sign In
           </Typography>
           <Typography variant="body2" align="center">
-            {'Not a member yet? '}
-            <Link
-              href="/register"
-              align="center"
-              underline="always"
-            >
+            {"Not a member yet? "}
+            <Link href="/register" align="center" underline="always">
               Sign Up here
             </Link>
           </Typography>
@@ -112,16 +180,11 @@ function SignIn() {
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? 'In progress…' : 'Sign In'}
+                {submitting || sent ? "In progress…" : "Sign In"}
               </FormButton>
             </form>
           )}
         </Form>
-        <Typography align="center">
-          <Link underline="always" href="/premium-themes/onepirate/forgot-password/">
-            Forgot password?
-          </Link>
-        </Typography>
       </AppForm>
       <AppFooter />
     </React.Fragment>
