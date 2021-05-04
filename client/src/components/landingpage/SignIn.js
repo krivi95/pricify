@@ -117,11 +117,6 @@ function SignIn() {
             </form>
           )}
         </Form>
-        <Typography align="center">
-          <Link underline="always" href="/premium-themes/onepirate/forgot-password/">
-            Forgot password?
-          </Link>
-        </Typography>
       </AppForm>
       <AppFooter />
     </React.Fragment>
