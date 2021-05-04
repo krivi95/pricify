@@ -1,10 +1,11 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Typography from '../components/Typography';
-import verifyDemo from '../img/verifyDemo.png'
+import * as React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import Typography from "../components/Typography";
+import verifyDemo from "../img/verifyDemo.png";
 
+// React router
 import { useHistory } from "react-router-dom";
 
 const styles = (theme) => ({
@@ -14,21 +15,20 @@ const styles = (theme) => ({
   },
   images: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexWrap: 'wrap',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%', 
-    
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
   },
   image: {
-    height: 'auto',
-    maxWidth: '100%',
-    '&:hover': {
-      opacity: '0.5',
-      cursor: 'pointer'
+    height: "auto",
+    maxWidth: "100%",
+    "&:hover": {
+      opacity: "0.5",
+      cursor: "pointer",
     },
-  }
+  },
 });
 
 function ProductCategories(props) {
@@ -45,7 +45,9 @@ function ProductCategories(props) {
           className={classes.image}
           src={verifyDemo}
           alt="increase priority"
-          onClick={() => { history.push("/demo/verify/store-id/item-id"); }}
+          onClick={() => {
+            history.push("/demo/verify/store-id/item-id");
+          }}
         />
       </div>
     </Container>

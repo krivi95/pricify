@@ -1,28 +1,28 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Typography from '../components/Typography';
-import TextField from '../components/TextField';
-import Snackbar from '../components/Snackbar';
-import Button from '../components/Button';
+import * as React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
+import Typography from "../components/Typography";
+import TextField from "../components/TextField";
+import Snackbar from "../components/Snackbar";
+import Button from "../components/Button";
 
-import firebase from '../../../../firebase/firebase'
+import firebase from "../../../../firebase/firebase";
 
 const styles = (theme) => ({
   root: {
     marginTop: theme.spacing(2),
     marginBottom: 0,
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
   },
   cardWrapper: {
     zIndex: 1,
   },
   card: {
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
     backgroundColor: theme.palette.secondary.main,
     padding: theme.spacing(8, 3),
   },
@@ -30,19 +30,23 @@ const styles = (theme) => ({
     maxWidth: 400,
   },
   textField: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(5),
   },
   button: {
-    width: '100%',
+    width: "100%",
   },
 });
 
 function ProductCTA(props) {
   const { classes } = props;
   const [open, setOpen] = React.useState(false);
-  const [inputData, setInputData] = React.useState({ message: "", email: "", name: "" });
+  const [inputData, setInputData] = React.useState({
+    message: "",
+    email: "",
+    name: "",
+  });
 
   const handleSubmit = (event) => {
     // Displaying Snackbar message
@@ -50,16 +54,15 @@ function ProductCTA(props) {
     setOpen(true);
 
     // Submiting data to the Firebase
-    var postListRef = firebase.database().ref('leads');
+    var postListRef = firebase.database().ref("leads");
     var newPostRef = postListRef.push();
     newPostRef.set({
       name: inputData.name,
       email: inputData.email,
       message: inputData.message,
-      date: Date().toLocaleString()
+      date: Date().toLocaleString(),
     });
   };
-
 
   const handleClose = () => {
     setOpen(false);
@@ -80,7 +83,9 @@ function ProductCTA(props) {
                 className={classes.textField}
                 placeholder="Name"
                 variant="standard"
-                onChange={e => setInputData({ ...inputData, name: e.target.value })}
+                onChange={(e) =>
+                  setInputData({ ...inputData, name: e.target.value })
+                }
               />
               <TextField
                 name="message"
@@ -90,7 +95,9 @@ function ProductCTA(props) {
                 className={classes.textField}
                 placeholder="Message"
                 variant="standard"
-                onChange={e => setInputData({ ...inputData, message: e.target.value })}
+                onChange={(e) =>
+                  setInputData({ ...inputData, message: e.target.value })
+                }
               />
               <TextField
                 name="email"
@@ -99,7 +106,9 @@ function ProductCTA(props) {
                 placeholder="Your email"
                 variant="standard"
                 // onChange={handleInputChange}
-                onChange={e => setInputData({ ...inputData, email: e.target.value })}
+                onChange={(e) =>
+                  setInputData({ ...inputData, email: e.target.value })
+                }
               />
               <Button
                 type="submit"

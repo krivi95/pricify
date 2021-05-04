@@ -1,17 +1,23 @@
-import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import { Field, Form, FormSpy } from 'react-final-form';
-import Typography from './modules/components/Typography';
-import AppFooter from './modules/views/AppFooter';
-import AppAppBar from './modules/views/AppAppBar';
-import AppForm from './modules/views/AppForm';
-import { email, required } from './modules/form/validation';
-import RFTextField from './modules/form/RFTextField';
-import FormButton from './modules/form/FormButton';
-import FormFeedback from './modules/form/FormFeedback';
-import withRoot from './modules/withRoot';
+import * as React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Link from "@material-ui/core/Link";
+import { Field, Form, FormSpy } from "react-final-form";
+import Typography from "./modules/components/Typography";
+import AppFooter from "./modules/views/AppFooter";
+import AppAppBar from "./modules/views/AppAppBar";
+import AppForm from "./modules/views/AppForm";
+import { email, required } from "./modules/form/validation";
+import RFTextField from "./modules/form/RFTextField";
+import FormButton from "./modules/form/FormButton";
+import FormFeedback from "./modules/form/FormFeedback";
+import withRoot from "./modules/withRoot";
+
+// Firebase import
+import firebase from "../../firebase/firebase";
+
+// React router
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -29,9 +35,13 @@ const useStyles = makeStyles((theme) => ({
 function SignUp() {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
+  const history = useHistory();
 
   const validate = (values) => {
-    const errors = required(['firstName', 'lastName', 'email', 'password'], values);
+    const errors = required(
+      ["firstName", "lastName", "email", "password", "storeName", "ethAddress"],
+      values
+    );
 
     if (!errors.email) {
       const emailError = email(values.email);
@@ -43,8 +53,58 @@ function SignUp() {
     return errors;
   };
 
-  const handleSubmit = () => {
+  const firebaseWriteUserData = async (user, userData) => {
+    /**
+     * Inserts new user record into Firebase Realtime database.
+     * Only store managers will be created from the webapp.
+     * Application superuser has to be created manually on Firebase.
+     */
+
+    // Account metadata
+    if (Boolean(userData.newStore)) {
+      userData.accountType = "storeOwner";
+    } else {
+      userData.accountType = "storeAdmin";
+    }
+    userData.activated = false;
+
+    // Commit data to db
+    firebase
+      .database()
+      .ref("users/" + user.uid)
+      .set(userData)
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
+  const firebaseSignUp = async (userData) => {
+    /**
+     * Creates new user for Firebase email authentication.
+     */
+    try {
+      // Create new Firebase login
+      const firebaseUser = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(userData.email, userData.password);
+      console.log(firebaseUser.user);
+
+      // Write used data to db
+      await firebaseWriteUserData(firebaseUser.user, userData);
+
+      // Navite to the homepage for the user
+      history.push("/store-welcome");
+    } catch (error) {
+      setSent(false);
+      alert(error);
+    }
+  };
+
+  const handleSubmit = async (userData) => {
     setSent(true);
+
+    // Creating new user on Firebase
+    await firebaseSignUp(userData);
   };
 
   return (
@@ -94,6 +154,52 @@ function SignUp() {
                 </Grid>
               </Grid>
               <Field
+                autoComplete="storeName"
+                component={RFTextField}
+                disabled={submitting || sent}
+                fullWidth
+                label="Store name"
+                margin="normal"
+                name="storeName"
+                required
+              />
+              <Field
+                name="newStore"
+                component="input"
+                type="radio"
+                value="true"
+                className="custom-control-input"
+                margin="normal"
+                id="true"
+                required
+              />
+              <label className="custom-control-label" htmlFor="true">
+                New store
+              </label>
+              <Field
+                name="newStore"
+                component="input"
+                type="radio"
+                value="false"
+                className="custom-control-input"
+                margin="normal"
+                id="false"
+                required
+              />
+              <label className="custom-control-label" htmlFor="false">
+                Existing store
+              </label>
+              <Field
+                autoComplete="ethAddress"
+                component={RFTextField}
+                disabled={submitting || sent}
+                fullWidth
+                label="ETH address"
+                margin="normal"
+                name="ethAddress"
+                required
+              />
+              <Field
                 autoComplete="email"
                 component={RFTextField}
                 disabled={submitting || sent}
@@ -129,7 +235,7 @@ function SignUp() {
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? 'In progress…' : 'Sign Up'}
+                {submitting || sent ? "In progress…" : "Sign Up"}
               </FormButton>
             </form>
           )}
