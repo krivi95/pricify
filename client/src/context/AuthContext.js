@@ -1,5 +1,10 @@
+//  ReactJS components
 import React, { useEffect, useState } from "react";
+
+// Local ReactJS components
 import app from "../firebase/firebase";
+import Loading from "../components/Loading";
+
 
 export const AuthContext = React.createContext({ currentUser: null });
 
@@ -15,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     if (pending) {
-        return <>Loading...</>
+        return (<Loading />)
     }
     else {
         return (
