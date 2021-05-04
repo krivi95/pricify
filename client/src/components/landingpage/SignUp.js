@@ -1,8 +1,14 @@
+// ReactJS components
 import * as React from "react";
+import { Field, Form, FormSpy } from "react-final-form";
+import { useHistory } from "react-router-dom";
+
+// MaterialUI Components
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-import { Field, Form, FormSpy } from "react-final-form";
+
+// Landing page template components
 import Typography from "./modules/components/Typography";
 import AppFooter from "./modules/views/AppFooter";
 import AppAppBar from "./modules/views/AppAppBar";
@@ -13,11 +19,8 @@ import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import withRoot from "./modules/withRoot";
 
-// Firebase import
+// Local ReactJS components
 import firebase from "../../firebase/firebase";
-
-// React router
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -82,6 +85,7 @@ function SignUp() {
     /**
      * Creates new user for Firebase email authentication.
      */
+
     try {
       // Create new Firebase login
       const firebaseUser = await firebase
@@ -102,8 +106,6 @@ function SignUp() {
 
   const handleSubmit = async (userData) => {
     setSent(true);
-
-    // Creating new user on Firebase
     await firebaseSignUp(userData);
   };
 
