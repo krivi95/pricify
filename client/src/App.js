@@ -12,6 +12,8 @@ import Home from "./components/landingpage/Home";
 
 // React Router
 import { Route, BrowserRouter as Router } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 import "./App.css";
 
@@ -19,16 +21,17 @@ export default function App() {
 
 
   return (
-    <Router>
-      <div className="App">
-        <Route path="/" exact component={Home} />
-        <Route path="/login" component={SignIn} />
-        <Route path="/register" component={SignUp} />
-        <Route path="/demo/verify/:storeId/:productId" component={VerifyPriceScreenDemo} />
-        <Route path="/admin" component={AdminHomeScreen} />
-        <Route path="/store" component={StoreHomeScreen} />
-
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Route path="/" exact component={Home} />
+          <Route path="/login" component={SignIn} />
+          <Route path="/register" component={SignUp} />
+          <Route path="/demo/verify/:storeId/:productId" component={VerifyPriceScreenDemo} />
+          <PrivateRoute path="/admin" component={AdminHomeScreen} />
+          <PrivateRoute path="/store" component={StoreHomeScreen} />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
