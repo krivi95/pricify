@@ -16,8 +16,20 @@ import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { mainListItems } from "./listItems";
-import Orders from "./Orders";
+
+// Menu options
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MessageIcon from "@material-ui/icons/Message";
+import AssessmentIcon from "@material-ui/icons/Assessment";
+import PeopleIcon from "@material-ui/icons/People";
+
+// Menu components
+import Welcome from "./Welcome";
+import Messages from "./Messages";
+import Users from "./Users";
+import Stats from "./Stats";
 
 // React Router
 import { Redirect } from "react-router-dom";
@@ -124,89 +136,129 @@ export default function Dashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [redirectPage, setRedirectPage] = React.useState(null);
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState(<Welcome/>);
 
+  // React.useEffect(() => {
+  //   console.log("adasd");
+  //   setRedirectPage(<Welcome/>);
+  // }, [redirectPage]);
+
+  // Menu drawer open
   const handleDrawerOpen = () => {
     setOpen(true);
   };
 
+  // Menu drawer close
   const handleDrawerClose = () => {
     setOpen(false);
   };
 
+  // Logging out of admin page
   const logout = () => {
     firebase.auth().signOut();
     setRedirectPage(<Redirect push to="/" />);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  const viewMessages = () => {
+    setSelectedMenuItem(<Messages/>);
+  };
+
+  const viewUsers = () => {
+    setSelectedMenuItem(<Users/>);
+  };
+
+  const viewStats = () => {
+    setSelectedMenuItem(<Stats/>);
+  };
 
   // If admin user has logged out
   if (redirectPage != null) {
     return redirectPage;
-  }
-
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(
-              classes.menuButton,
-              open && classes.menuButtonHidden
-            )}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            PRICIFY
-          </Typography>
-          <IconButton color="inherit" onClick={logout}>LOGOUT</IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{mainListItems}</List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
+  } else {
+    return (
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          position="absolute"
+          className={clsx(classes.appBar, open && classes.appBarShift)}
+        >
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              className={clsx(
+                classes.menuButton,
+                open && classes.menuButtonHidden
+              )}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={classes.title}
+            >
+              PRICIFY
+            </Typography>
+            <IconButton color="inherit" onClick={logout}>
+              LOGOUT
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          }}
+          open={open}
+        >
+          <div className={classes.toolbarIcon}>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            <div>
+              <ListItem button onClick={viewMessages}>
+                <ListItemIcon>
+                  <MessageIcon />
+                </ListItemIcon>
+                <ListItemText primary="Messages" />
+              </ListItem>
+              <ListItem button onClick={viewStats}>
+                <ListItemIcon>
+                  <AssessmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Stats" />
+              </ListItem>
+              <ListItem button onClick={viewUsers}>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Users" />
+              </ListItem>
+            </div>
+          </List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>{selectedMenuItem}</Paper>
+              </Grid>
             </Grid>
-          </Grid>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-        </Container>
-      </main>
-    </div>
-  );
+            <Box pt={4}>
+              <Copyright />
+            </Box>
+          </Container>
+        </main>
+      </div>
+    );
+  }
 }
