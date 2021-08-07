@@ -33,6 +33,7 @@ import Stats from "./Stats";
 
 // React Router
 import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 // Firebase
 import firebase from "../../firebase/firebase";
@@ -42,7 +43,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
-        pricify.me 2021
+        pricify.me
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -136,12 +137,8 @@ export default function Dashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [redirectPage, setRedirectPage] = React.useState(null);
-  const [selectedMenuItem, setSelectedMenuItem] = React.useState(<Welcome/>);
-
-  // React.useEffect(() => {
-  //   console.log("adasd");
-  //   setRedirectPage(<Welcome/>);
-  // }, [redirectPage]);
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState(<Welcome />);
+  const history = useHistory();
 
   // Menu drawer open
   const handleDrawerOpen = () => {
@@ -159,16 +156,21 @@ export default function Dashboard() {
     setRedirectPage(<Redirect push to="/" />);
   };
 
+  // Home screen, but keep bein logged in
+  const home = () => {
+    firebase.auth().signOut();
+    history.push("/");
+  };
   const viewMessages = () => {
-    setSelectedMenuItem(<Messages/>);
+    setSelectedMenuItem(<Messages />);
   };
 
   const viewUsers = () => {
-    setSelectedMenuItem(<Users/>);
+    setSelectedMenuItem(<Users />);
   };
 
   const viewStats = () => {
-    setSelectedMenuItem(<Stats/>);
+    setSelectedMenuItem(<Stats />);
   };
 
   // If admin user has logged out
@@ -202,7 +204,9 @@ export default function Dashboard() {
               noWrap
               className={classes.title}
             >
-              PRICIFY
+              <IconButton color="inherit" onClick={home}>
+                PRICIFY
+              </IconButton>
             </Typography>
             <IconButton color="inherit" onClick={logout}>
               LOGOUT

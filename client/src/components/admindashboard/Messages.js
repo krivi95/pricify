@@ -43,7 +43,8 @@ function Messages() {
   } else {
     return (
       <React.Fragment>
-        <Title>Leads from landing page:</Title>
+        <h1>Messages</h1>
+        <Title>Overview of leads from landing page:</Title>
         <Table>
           <TableHead>
             <TableRow>

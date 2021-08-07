@@ -45,7 +45,7 @@ const createNewStore = async (event, userId, user) => {
     numOfStoreAdmin: 1,
     creationTime: Date().toLocaleString(),
   });
-  
+
   alert("Successfully created store on smart contarct for new user!");
 };
 
@@ -148,7 +148,8 @@ function Users() {
 
     return (
       <React.Fragment>
-        <Title>Managining users:</Title>
+        <h1>Users</h1>
+        <Title>Manage users, allow/revoke access to Pricify, create store on smart contract for a new requests: </Title>
         <Table>
           <TableHead>
             <TableRow>
