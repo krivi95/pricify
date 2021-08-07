@@ -18,7 +18,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 // Local ReactJS components
-import {default as CustomTypography} from '../landingpage/modules/components/Typography';
+import { default as CustomTypography } from "../landingpage/modules/components/Typography";
 
 // Menu options
 import ListItem from "@material-ui/core/ListItem";
@@ -27,6 +27,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import MessageIcon from "@material-ui/icons/Message";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import PeopleIcon from "@material-ui/icons/People";
+import HomeIcon from '@material-ui/icons/Home';
 
 // Menu components
 import Welcome from "./Welcome";
@@ -125,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
-    alignItems: 'center',
+    alignItems: "center",
   },
   paper: {
     padding: theme.spacing(2),
@@ -144,7 +145,8 @@ export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const [redirectPage, setRedirectPage] = React.useState(null);
   const [selectedMenuItem, setSelectedMenuItem] = React.useState(<Welcome />);
-  const [selectedMenuItemTitle, setSelectedMenuItemTitle] = React.useState("Welcome back!");
+  const [selectedMenuItemTitle, setSelectedMenuItemTitle] =
+    React.useState("Home");
   const history = useHistory();
 
   // Menu drawer open
@@ -168,6 +170,12 @@ export default function Dashboard() {
     firebase.auth().signOut();
     history.push("/");
   };
+
+  const viewHome = () => {
+    setSelectedMenuItem(<Welcome />);
+    setSelectedMenuItemTitle("Home");
+  };
+
   const viewMessages = () => {
     setSelectedMenuItem(<Messages />);
     setSelectedMenuItemTitle("Messages");
@@ -238,6 +246,12 @@ export default function Dashboard() {
           <Divider />
           <List>
             <div>
+            <ListItem button onClick={viewHome}>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
               <ListItem button onClick={viewMessages}>
                 <ListItemIcon>
                   <MessageIcon />
