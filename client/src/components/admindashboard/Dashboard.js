@@ -19,6 +19,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 // Local ReactJS components
 import { default as CustomTypography } from "../landingpage/modules/components/Typography";
+import { SmartContractProvider } from "../../context/SmartContractContext";
 
 // Menu options
 import ListItem from "@material-ui/core/ListItem";
@@ -27,10 +28,10 @@ import ListItemText from "@material-ui/core/ListItemText";
 import MessageIcon from "@material-ui/icons/Message";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import PeopleIcon from "@material-ui/icons/People";
-import HomeIcon from '@material-ui/icons/Home';
+import HomeIcon from "@material-ui/icons/Home";
 
 // Menu components
-import Welcome from "./Welcome";
+import Home from "./Home";
 import Messages from "./Messages";
 import Users from "./Users";
 import Stats from "./Stats";
@@ -144,7 +145,7 @@ export default function Dashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [redirectPage, setRedirectPage] = React.useState(null);
-  const [selectedMenuItem, setSelectedMenuItem] = React.useState(<Welcome />);
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState(<Home />);
   const [selectedMenuItemTitle, setSelectedMenuItemTitle] =
     React.useState("Home");
   const history = useHistory();
@@ -172,7 +173,7 @@ export default function Dashboard() {
   };
 
   const viewHome = () => {
-    setSelectedMenuItem(<Welcome />);
+    setSelectedMenuItem(<Home />);
     setSelectedMenuItemTitle("Home");
   };
 
@@ -246,7 +247,7 @@ export default function Dashboard() {
           <Divider />
           <List>
             <div>
-            <ListItem button onClick={viewHome}>
+              <ListItem button onClick={viewHome}>
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
@@ -291,7 +292,9 @@ export default function Dashboard() {
                   </span>
                 </CustomTypography>
                 <Paper elevation={3} className={classes.paper}>
-                  {selectedMenuItem}
+                  <SmartContractProvider>
+                    {selectedMenuItem}
+                  </SmartContractProvider>
                 </Paper>
               </Grid>
             </Grid>

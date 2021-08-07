@@ -1,5 +1,5 @@
 // ReactJS components
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 //  Material-UI imports
 import Table from "@material-ui/core/Table";
@@ -19,6 +19,7 @@ import firebase from "../../firebase/firebase";
 
 // Local ReactJS components
 import { default as CustomTypography } from "../landingpage/modules/components/Typography";
+import { SmartContractContext } from "../../context/SmartContractContext";
 import Loading from "../Loading";
 
 const createNewStore = async (event, userId, user) => {
@@ -126,6 +127,9 @@ function createTableRows(allUsers) {
 function Users() {
   const [users, setUsers] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const smartContractContext = useContext(SmartContractContext);
+
+  console.log(smartContractContext);
 
   useEffect(() => {
     async function getUsers() {

@@ -1,5 +1,5 @@
 // ReactJS components
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, } from "react";
 
 // Local ReactJS components
 import LoadContract from "../LoadContract";
@@ -12,7 +12,7 @@ import Divider from "@material-ui/core/Divider";
 // Firebase
 import firebase from "../../firebase/firebase";
 
-function StoreHomeScreen() {
+function Home() {
   const [name, setName] = useState("");
 
   // Loading user's name
@@ -74,4 +74,4 @@ function StoreHomeScreen() {
   );
 }
 
-export default StoreHomeScreen;
+export default Home;

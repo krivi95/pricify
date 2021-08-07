@@ -1,8 +1,9 @@
 // ReactJS components
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 
 // Local ReactJS components
 import MetaMaskLogo from "../components/img/metamask.svg";
+import { SmartContractContext } from "../context/SmartContractContext";
 
 // MaterialUI components
 import Button from "@material-ui/core/Button";
@@ -11,8 +12,9 @@ import Button from "@material-ui/core/Button";
 import StoreManager from "../contracts/StoreManager.json";
 import getWeb3 from "../getWeb3";
 
+// Loads web3 and StoreManager smart contract and sets them into global context
 export default function LoadContract() {
-  const [contractInfo, setContractInfo] = useState(null);
+  const smartContractContext = useContext(SmartContractContext);
 
   async function loadStoreManagerContract() {
     // Get network provider and web3 instance.
@@ -30,13 +32,14 @@ export default function LoadContract() {
         StoreManager.networks[networkId].address
     );
 
-    setContractInfo({
+    // Updating global context
+    smartContractContext.setContractInfo({
       web3: web3,
       accounts: accounts,
       storeManager: storeManager,
     });
-    
-    alert("MetaMask wallet connected!")
+
+    alert("MetaMask wallet connected!");
   }
 
   return (
