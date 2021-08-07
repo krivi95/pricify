@@ -16,11 +16,29 @@ import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { mainListItems } from "./listItems";
-import Orders from "./Orders";
+
+// Local ReactJS components
+import { default as CustomTypography } from "../landingpage/modules/components/Typography";
+import { SmartContractProvider } from "../../context/SmartContractContext";
+
+// Menu options
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import MessageIcon from "@material-ui/icons/Message";
+import AssessmentIcon from "@material-ui/icons/Assessment";
+import PeopleIcon from "@material-ui/icons/People";
+import HomeIcon from "@material-ui/icons/Home";
+
+// Menu components
+import Home from "./Home";
+import Messages from "./Messages";
+import Users from "./Users";
+import Stats from "./Stats";
 
 // React Router
 import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 // Firebase
 import firebase from "../../firebase/firebase";
@@ -30,7 +48,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
-        pricify.me 2021
+        pricify.me
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -104,16 +122,19 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: "100vh",
     overflow: "auto",
+    backgroundColor: "#faf5fa",
   },
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
+    alignItems: "center",
   },
   paper: {
     padding: theme.spacing(2),
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
+    backgroundColor: "#fbf3fb",
   },
   fixedHeight: {
     height: 240,
@@ -124,89 +145,165 @@ export default function Dashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [redirectPage, setRedirectPage] = React.useState(null);
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState(<Home />);
+  const [selectedMenuItemTitle, setSelectedMenuItemTitle] =
+    React.useState("Home");
+  const history = useHistory();
 
+  // Menu drawer open
   const handleDrawerOpen = () => {
     setOpen(true);
   };
 
+  // Menu drawer close
   const handleDrawerClose = () => {
     setOpen(false);
   };
 
+  // Logging out of admin page
   const logout = () => {
     firebase.auth().signOut();
     setRedirectPage(<Redirect push to="/" />);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  // Home screen, but keep bein logged in
+  const home = () => {
+    firebase.auth().signOut();
+    history.push("/");
+  };
+
+  const viewHome = () => {
+    setSelectedMenuItem(<Home />);
+    setSelectedMenuItemTitle("Home");
+  };
+
+  const viewMessages = () => {
+    setSelectedMenuItem(<Messages />);
+    setSelectedMenuItemTitle("Messages");
+  };
+
+  const viewUsers = () => {
+    setSelectedMenuItem(<Users />);
+    setSelectedMenuItemTitle("Users");
+  };
+
+  const viewStats = () => {
+    setSelectedMenuItem(<Stats />);
+    setSelectedMenuItemTitle("Pricify statistics");
+  };
 
   // If admin user has logged out
   if (redirectPage != null) {
     return redirectPage;
-  }
-
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(
-              classes.menuButton,
-              open && classes.menuButtonHidden
-            )}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            PRICIFY
-          </Typography>
-          <IconButton color="inherit" onClick={logout}>LOGOUT</IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{mainListItems}</List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
+  } else {
+    return (
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          position="absolute"
+          className={clsx(classes.appBar, open && classes.appBarShift)}
+        >
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              className={clsx(
+                classes.menuButton,
+                open && classes.menuButtonHidden
+              )}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={classes.title}
+            >
+              <IconButton color="inherit" onClick={home}>
+                PRICIFY
+              </IconButton>
+            </Typography>
+            <IconButton color="inherit" onClick={logout}>
+              LOGOUT
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          }}
+          open={open}
+        >
+          <div className={classes.toolbarIcon}>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <Divider />
+          <List>
+            <div>
+              <ListItem button onClick={viewHome}>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+              <ListItem button onClick={viewMessages}>
+                <ListItemIcon>
+                  <MessageIcon />
+                </ListItemIcon>
+                <ListItemText primary="Messages" />
+              </ListItem>
+              <ListItem button onClick={viewStats}>
+                <ListItemIcon>
+                  <AssessmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Stats" />
+              </ListItem>
+              <ListItem button onClick={viewUsers}>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Users" />
+              </ListItem>
+            </div>
+          </List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <CustomTypography
+                  variant="h3"
+                  gutterBottom
+                  marked="center"
+                  align="center"
+                >
+                  <span
+                    style={{ fontWeight: "lighter", fontFamily: "monospace" }}
+                  >
+                    {selectedMenuItemTitle}
+                  </span>
+                </CustomTypography>
+                <Paper elevation={3} className={classes.paper}>
+                  <SmartContractProvider>
+                    {selectedMenuItem}
+                  </SmartContractProvider>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-        </Container>
-      </main>
-    </div>
-  );
+            <Box pt={4}>
+              <Copyright />
+            </Box>
+          </Container>
+        </main>
+      </div>
+    );
+  }
 }
