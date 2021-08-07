@@ -22,55 +22,7 @@ import { default as CustomTypography } from "../landingpage/modules/components/T
 import { SmartContractContext } from "../../context/SmartContractContext";
 import Loading from "../Loading";
 
-const createNewStore = async (event, userId, user) => {
-  /**
-   * Function that activates or deactivates user's access to the system
-   */
-
-  // Change the activation status flag
-  user.newStore = false;
-
-  // Update user record in the database
-  const requessRef = firebase.database().ref("users").child(userId);
-  await requessRef.update({
-    newStore: user.newStore,
-  });
-
-  // Create a new store record in database
-  var postListRef = firebase.database().ref("stores");
-  var newPostRef = postListRef.push();
-  newPostRef.set({
-    ownerUserId: userId,
-    ownerEmail: user.email,
-    ownerEthAddress: user.ethAddress,
-    name: user.storeName,
-    numOfItems: 0, // no items yet in the store
-    numOfStoreAdmins: 1, // currently only store owner
-    creationTime: Date().toLocaleString(),
-  });
-
-  alert("Successfully created store on smart contarct for new user!");
-};
-
-const activateOrDeactiveteUser = async (event, userId, user) => {
-  /**
-   * Function that activates or deactivates user's access to the system
-   */
-
-  // Change the activation status flag
-  user.activated = !user.activated;
-
-  // Update user record in the database
-  const requessRef = firebase.database().ref("users").child(userId);
-  await requessRef.update({
-    activated: user.activated,
-  });
-  user.activated
-    ? alert("Successfully activated user's account!")
-    : alert("Deactivated user's request!");
-};
-
-function createTableRows(allUsers) {
+function createTableRows(allUsers, createNewStore, activateOrDeactiveteUser) {
   let tableRows = [];
   for (let key in allUsers) {
     tableRows.push(
@@ -93,7 +45,7 @@ function createTableRows(allUsers) {
               <ShoppingCartIcon style={{ color: green[500] }} />
             </IconButton>
           ) : (
-            "Store exists"
+            "Store already created"
           )}
         </TableCell>
         <TableCell>
@@ -129,8 +81,6 @@ function Users() {
   const [isLoading, setIsLoading] = useState(true);
   const smartContractContext = useContext(SmartContractContext);
 
-  console.log(smartContractContext);
-
   useEffect(() => {
     async function getUsers() {
       /**
@@ -147,10 +97,90 @@ function Users() {
     getUsers();
   }, []);
 
+  const createStoreOnBlockchain = async (storeName, storeOwner) => {
+    /**
+     * Creates a new store on the blockchain through StoreManager cotracts
+     * (only contract owner is able to create a store for a new user, the one who deployed the contract)
+     */
+    if (smartContractContext) {
+      await smartContractContext.contractInfo.storeManager.methods
+        .createNewStore(storeName, storeOwner)
+        .send({ from: smartContractContext.contractInfo.accounts[0] });
+    } else {
+      alert(
+        "MetaMask hasn't been connected. Please conenct you're MetaMask wallet on home page and then continue"
+      );
+    }
+  };
+
+  const createNewStore = async (event, userId, user) => {
+    /**
+     * Function that activates or deactivates user's access to the system
+     */
+
+    event.preventDefault();
+
+    // Change the activation status flag
+    user.newStore = false;
+
+    // Creating a new store record on smart contract
+    // Contract's owner creates store (the onle who deployed the contracts)
+    // If there is some error when interacting with smart contract, abort store creation 
+    try {
+      await createStoreOnBlockchain(user.storeName, user.ethAddress);
+    } catch (error) {
+      console.log(error);
+      alert(
+        "There was an arror when tried to create new store on blockchain: " +
+          error.message
+      );
+      return;
+    }
+
+    // Update user record in the database
+    const requessRef = firebase.database().ref("users").child(userId);
+    await requessRef.update({
+      newStore: user.newStore,
+    });
+
+    // Create a new store record in database
+    var postListRef = firebase.database().ref("stores");
+    var newPostRef = postListRef.push();
+    newPostRef.set({
+      ownerUserId: userId,
+      ownerEmail: user.email,
+      ownerEthAddress: user.ethAddress,
+      name: user.storeName,
+      numOfItems: 0, // no items yet in the store
+      numOfStoreAdmins: 1, // currently only store owner
+      creationTime: Date().toLocaleString(),
+    });
+
+    alert("Successfully created store on smart contarct for new user!");
+  };
+
+  const activateOrDeactiveteUser = async (event, userId, user) => {
+    /**
+     * Function that activates or deactivates user's access to the system
+     */
+
+    // Change the activation status flag
+    user.activated = !user.activated;
+
+    // Update user record in the database
+    const requessRef = firebase.database().ref("users").child(userId);
+    await requessRef.update({
+      activated: user.activated,
+    });
+    user.activated
+      ? alert("Successfully activated user's account!")
+      : alert("Deactivated user's request!");
+  };
+
   if (isLoading) {
     return <Loading />;
   } else {
-    let rows = createTableRows(users);
+    let rows = createTableRows(users, createNewStore, activateOrDeactiveteUser);
 
     return (
       <React.Fragment>
