@@ -117,6 +117,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: "100vh",
     overflow: "auto",
+    backgroundColor: "#faf5fa",
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -127,6 +128,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
+    backgroundColor: "#fbf3fb",
   },
   fixedHeight: {
     height: 240,
@@ -254,7 +256,7 @@ export default function Dashboard() {
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Paper className={classes.paper}>{selectedMenuItem}</Paper>
+                <Paper elevation={3} className={classes.paper}>{selectedMenuItem}</Paper>
               </Grid>
             </Grid>
             <Box pt={4}>

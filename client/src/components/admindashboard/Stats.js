@@ -48,12 +48,12 @@ function Stats() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Store name</TableCell>
-              <TableCell>Store owner</TableCell>
-              <TableCell>Store owner ETH address</TableCell>
-              <TableCell>Creation time</TableCell>
-              <TableCell>Number of store items</TableCell>
-              <TableCell>Number of store admins</TableCell>
+              <TableCell><b>Store name</b></TableCell>
+              <TableCell><b>Store owner</b></TableCell>
+              <TableCell><b>Store owner ETH address</b></TableCell>
+              <TableCell><b>Creation time</b></TableCell>
+              <TableCell><b>Number of store items</b></TableCell>
+              <TableCell><b>Number of store admins</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

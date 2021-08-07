@@ -154,13 +154,13 @@ function Users() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Email</TableCell>
-              <TableCell>First name</TableCell>
-              <TableCell>Last name</TableCell>
-              <TableCell>Eth Address</TableCell>
-              <TableCell>Store name</TableCell>
-              <TableCell>New store</TableCell>
-              <TableCell>Activated</TableCell>
+              <TableCell><b>Email</b></TableCell>
+              <TableCell><b>First name</b></TableCell>
+              <TableCell><b>Last name</b></TableCell>
+              <TableCell><b>Eth Address</b></TableCell>
+              <TableCell><b>Store name</b></TableCell>
+              <TableCell><b>New store</b></TableCell>
+              <TableCell><b>Activated</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{rows}</TableBody>

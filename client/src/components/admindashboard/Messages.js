@@ -21,9 +21,9 @@ function Messages() {
 
   useEffect(() => {
     async function getLeads() {
-        /**
-         * Getting the leas from database (messages from Landing Page)
-         */
+      /**
+       * Getting the leas from database (messages from Landing Page)
+       */
       var leadsRef = firebase.database().ref("leads");
       var allLeads = [];
       await leadsRef.once("value", (snapshot) => {
@@ -48,10 +48,18 @@ function Messages() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Message</TableCell>
-              <TableCell>Date</TableCell>
+              <TableCell>
+                <b>Name</b>
+              </TableCell>
+              <TableCell>
+                <b>Email</b>
+              </TableCell>
+              <TableCell>
+                <b>Message</b>
+              </TableCell>
+              <TableCell>
+                <b>Date</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
