@@ -16,7 +16,7 @@ import Title from "./Title";
 import Loading from "../Loading";
 
 function Messages() {
-  const [leads, setLeads] = useState([]);
+  const [leads, setLeads] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ function Messages() {
          * Getting the leas from database (messages from Landing Page)
          */
       var leadsRef = firebase.database().ref("leads");
-      var allLeads = Array();
+      var allLeads = [];
       await leadsRef.once("value", (snapshot) => {
         snapshot.forEach((childSnapshot) => {
           allLeads.push(childSnapshot.val());

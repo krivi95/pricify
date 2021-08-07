@@ -70,6 +70,7 @@ function SignUp() {
       userData.accountType = "storeAdmin";
     }
     userData.activated = false;
+    userData.newStore = Boolean(userData.newStore);
 
     // Commit data to db
     firebase
