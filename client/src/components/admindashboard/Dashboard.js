@@ -17,6 +17,9 @@ import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
+// Local ReactJS components
+import {default as CustomTypography} from '../landingpage/modules/components/Typography';
+
 // Menu options
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -122,6 +125,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
+    alignItems: 'center',
   },
   paper: {
     padding: theme.spacing(2),
@@ -140,6 +144,7 @@ export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const [redirectPage, setRedirectPage] = React.useState(null);
   const [selectedMenuItem, setSelectedMenuItem] = React.useState(<Welcome />);
+  const [selectedMenuItemTitle, setSelectedMenuItemTitle] = React.useState("Welcome back!");
   const history = useHistory();
 
   // Menu drawer open
@@ -165,14 +170,17 @@ export default function Dashboard() {
   };
   const viewMessages = () => {
     setSelectedMenuItem(<Messages />);
+    setSelectedMenuItemTitle("Messages");
   };
 
   const viewUsers = () => {
     setSelectedMenuItem(<Users />);
+    setSelectedMenuItemTitle("Users");
   };
 
   const viewStats = () => {
     setSelectedMenuItem(<Stats />);
+    setSelectedMenuItemTitle("Pricify statistics");
   };
 
   // If admin user has logged out
@@ -256,7 +264,21 @@ export default function Dashboard() {
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Paper elevation={3} className={classes.paper}>{selectedMenuItem}</Paper>
+                <CustomTypography
+                  variant="h3"
+                  gutterBottom
+                  marked="center"
+                  align="center"
+                >
+                  <span
+                    style={{ fontWeight: "lighter", fontFamily: "monospace" }}
+                  >
+                    {selectedMenuItemTitle}
+                  </span>
+                </CustomTypography>
+                <Paper elevation={3} className={classes.paper}>
+                  {selectedMenuItem}
+                </Paper>
               </Grid>
             </Grid>
             <Box pt={4}>

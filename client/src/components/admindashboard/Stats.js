@@ -7,12 +7,13 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Divider from "@material-ui/core/Divider";
 
 // Firebase
 import firebase from "../../firebase/firebase";
 
 // Local ReactJS components
-import Title from "./Title";
+import { default as CustomTypography } from "../landingpage/modules/components/Typography";
 import Loading from "../Loading";
 
 function Stats() {
@@ -21,9 +22,9 @@ function Stats() {
 
   useEffect(() => {
     async function getStores() {
-        /**
-         * Getting the leas from database (Stats from Landing Page)
-         */
+      /**
+       * Getting the leas from database (Stats from Landing Page)
+       */
       var storesRef = firebase.database().ref("stores");
       var allStores = [];
       await storesRef.once("value", (snapshot) => {
@@ -43,17 +44,39 @@ function Stats() {
   } else {
     return (
       <React.Fragment>
-        <h1>Pricify statistics</h1>
-        <Title>Overview of user activity, stores, number of products:</Title>
+        <CustomTypography
+          variant="h5"
+          gutterBottom
+          marked="center"
+          align="center"
+        >
+          <span style={{ fontWeight: "lighter", fontFamily: "monospace" }}>
+            Overview of user activity, stores, number of products:
+          </span>
+        </CustomTypography>
+        &nbsp;
+        <Divider />
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><b>Store name</b></TableCell>
-              <TableCell><b>Store owner</b></TableCell>
-              <TableCell><b>Store owner ETH address</b></TableCell>
-              <TableCell><b>Creation time</b></TableCell>
-              <TableCell><b>Number of store items</b></TableCell>
-              <TableCell><b>Number of store admins</b></TableCell>
+              <TableCell>
+                <b>Store name</b>
+              </TableCell>
+              <TableCell>
+                <b>Store owner</b>
+              </TableCell>
+              <TableCell>
+                <b>Store owner ETH address</b>
+              </TableCell>
+              <TableCell>
+                <b>Creation time</b>
+              </TableCell>
+              <TableCell>
+                <b>Number of store items</b>
+              </TableCell>
+              <TableCell>
+                <b>Number of store admins</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

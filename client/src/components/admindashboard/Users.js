@@ -12,12 +12,13 @@ import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import CancelIcon from "@material-ui/icons/Cancel";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { green, red } from "@material-ui/core/colors";
+import Divider from "@material-ui/core/Divider";
 
 // Firebase
 import firebase from "../../firebase/firebase";
 
 // Local ReactJS components
-import Title from "./Title";
+import { default as CustomTypography } from "../landingpage/modules/components/Typography";
 import Loading from "../Loading";
 
 const createNewStore = async (event, userId, user) => {
@@ -33,7 +34,7 @@ const createNewStore = async (event, userId, user) => {
   await requessRef.update({
     newStore: user.newStore,
   });
-  
+
   // Create a new store record in database
   var postListRef = firebase.database().ref("stores");
   var newPostRef = postListRef.push();
@@ -42,8 +43,8 @@ const createNewStore = async (event, userId, user) => {
     ownerEmail: user.email,
     ownerEthAddress: user.ethAddress,
     name: user.storeName,
-    numOfItems: 0,        // no items yet in the store
-    numOfStoreAdmins: 1,  // currently only store owner
+    numOfItems: 0, // no items yet in the store
+    numOfStoreAdmins: 1, // currently only store owner
     creationTime: Date().toLocaleString(),
   });
 
@@ -149,18 +150,42 @@ function Users() {
 
     return (
       <React.Fragment>
-        <h1>Users</h1>
-        <Title>Manage users, allow/revoke access to Pricify, create store on smart contract for a new requests: </Title>
+        <CustomTypography
+          variant="h5"
+          gutterBottom
+          marked="center"
+          align="center"
+        >
+          <span style={{ fontWeight: "lighter", fontFamily: "monospace" }}>
+            Allow/revoke access and create a new store on smart contract:
+          </span>
+        </CustomTypography>
+        &nbsp;
+        <Divider />
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><b>Email</b></TableCell>
-              <TableCell><b>First name</b></TableCell>
-              <TableCell><b>Last name</b></TableCell>
-              <TableCell><b>Eth Address</b></TableCell>
-              <TableCell><b>Store name</b></TableCell>
-              <TableCell><b>New store</b></TableCell>
-              <TableCell><b>Activated</b></TableCell>
+              <TableCell>
+                <b>Email</b>
+              </TableCell>
+              <TableCell>
+                <b>First name</b>
+              </TableCell>
+              <TableCell>
+                <b>Last name</b>
+              </TableCell>
+              <TableCell>
+                <b>Eth Address</b>
+              </TableCell>
+              <TableCell>
+                <b>Store name</b>
+              </TableCell>
+              <TableCell>
+                <b>New store</b>
+              </TableCell>
+              <TableCell>
+                <b>Activated</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{rows}</TableBody>

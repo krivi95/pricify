@@ -7,13 +7,14 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Divider from "@material-ui/core/Divider";
 
 // Firebase
 import firebase from "../../firebase/firebase";
 
 // Local ReactJS components
-import Title from "./Title";
 import Loading from "../Loading";
+import { default as CustomTypography } from "../landingpage/modules/components/Typography";
 
 function Messages() {
   const [leads, setLeads] = useState(null);
@@ -43,8 +44,18 @@ function Messages() {
   } else {
     return (
       <React.Fragment>
-        <h1>Messages</h1>
-        <Title>Overview of leads from landing page:</Title>
+        <CustomTypography
+          variant="h5"
+          gutterBottom
+          marked="center"
+          align="center"
+        >
+          <span style={{ fontWeight: "lighter", fontFamily: "monospace" }}>
+            Overview of leads from landing page:
+          </span>
+        </CustomTypography>
+        &nbsp;
+        <Divider />
         <Table>
           <TableHead>
             <TableRow>
