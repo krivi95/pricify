@@ -40,9 +40,10 @@ const createNewStore = async (event, userId, user) => {
   newPostRef.set({
     ownerUserId: userId,
     ownerEmail: user.email,
+    ownerEthAddress: user.ethAddress,
     name: user.storeName,
-    numOfItems: 0,
-    numOfStoreAdmin: 1,
+    numOfItems: 0,        // no items yet in the store
+    numOfStoreAdmins: 1,  // currently only store owner
     creationTime: Date().toLocaleString(),
   });
 
