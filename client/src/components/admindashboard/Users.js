@@ -125,7 +125,7 @@ function Users() {
 
     // Creating a new store record on smart contract
     // Contract's owner creates store (the onle who deployed the contracts)
-    // If there is some error when interacting with smart contract, abort store creation 
+    // If there is some error when interacting with smart contract, abort store creation
     try {
       await createStoreOnBlockchain(user.storeName, user.ethAddress);
     } catch (error) {
@@ -136,12 +136,6 @@ function Users() {
       );
       return;
     }
-
-    // Update user record in the database
-    const requessRef = firebase.database().ref("users").child(userId);
-    await requessRef.update({
-      newStore: user.newStore,
-    });
 
     // Create a new store record in database
     var postListRef = firebase.database().ref("stores");
@@ -156,6 +150,14 @@ function Users() {
       creationTime: Date().toLocaleString(),
     });
 
+    // Update user record in the database
+    const requessRef = firebase.database().ref("users").child(userId);
+    await requessRef.update({
+      newStore: user.newStore,
+      storeId: newPostRef.key,
+    });
+
+    // Diplay action message
     alert("Successfully created store on smart contarct for new user!");
   };
 
