@@ -29,6 +29,7 @@ import MessageIcon from "@material-ui/icons/Message";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import PeopleIcon from "@material-ui/icons/People";
 import HomeIcon from "@material-ui/icons/Home";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 // Menu components
 import Home from "./Home";
@@ -40,6 +41,7 @@ import { useHistory } from "react-router-dom";
 
 // Firebase
 import firebase from "../../firebase/firebase";
+import Products from "./Products";
 
 function Copyright() {
   return (
@@ -175,10 +177,14 @@ export default function Dashboard() {
     setSelectedMenuItemTitle("Home");
   };
 
-
   const viewStats = () => {
     setSelectedMenuItem(<Stats />);
     setSelectedMenuItemTitle("Pricify statistics");
+  };
+
+  const viewProducts = () => {
+    setSelectedMenuItem(<Products />);
+    setSelectedMenuItemTitle("Store products");
   };
 
   // If admin user has logged out
@@ -247,6 +253,12 @@ export default function Dashboard() {
                   <AssessmentIcon />
                 </ListItemIcon>
                 <ListItemText primary="Stats" />
+              </ListItem>
+              <ListItem button onClick={viewProducts}>
+                <ListItemIcon>
+                  <ShoppingCartIcon />
+                </ListItemIcon>
+                <ListItemText primary="Products" />
               </ListItem>
             </div>
           </List>
