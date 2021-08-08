@@ -5,9 +5,5 @@ import React from "react";
 import Dashboard from "../components/admindashboard/Dashboard";
 
 export default function AdminHomeScreen() {
-  return (
-    <div>
-      <Dashboard/>
-    </div>
-  );
+  return <Dashboard />;
 }
