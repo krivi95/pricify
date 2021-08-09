@@ -1,5 +1,6 @@
 // ReactJS components
 import React, { useState, useEffect, useContext } from "react";
+import { useHistory } from "react-router-dom";
 
 // Local ReactJS components
 import { default as CustomTypography } from "../landingpage/modules/components/Typography";
@@ -22,7 +23,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import Tooltip from "@material-ui/core/Tooltip";
 import { red } from "@material-ui/core/colors";
 
-function createTableRows(allProducts, storeInfo, smartContractContext) {
+function createTableRows(allProducts, smartContractContext, routeToVerifyPage) {
   let tableRows = [];
   for (let key in allProducts) {
     tableRows.push(
@@ -54,6 +55,9 @@ function createTableRows(allProducts, storeInfo, smartContractContext) {
               color="primary"
               aria-label="add to shopping cart"
               size="small"
+              onClick={() =>
+                routeToVerifyPage(allProducts[key].storeId, allProducts[key].id)
+              }
             >
               <MoreVertIcon style={{ color: red[500] }} />
             </IconButton>
@@ -70,6 +74,15 @@ function Home() {
   const [storeInfo, setStoreInfo] = useState(null);
   const [products, setProducts] = useState(null);
   const smartContractContext = useContext(SmartContractContext);
+  const history = useHistory();
+
+  const routeToVerifyPage = (storeId, productId) => {
+    /**
+     * Routes to new page: /verify/:storeId/:productId"
+     */
+    let path = "/verify/" + storeId + "/" + productId;
+    history.push(path);
+  };
 
   useEffect(() => {
     async function getAllProducts() {
@@ -105,6 +118,7 @@ function Home() {
               name: item[2],
               currentPrice: item[3],
               numberOfPrices: parseInt(item[4]),
+              storeId: storeInfo[0],
             });
           }
           setProducts(products);
@@ -127,7 +141,11 @@ function Home() {
     return <Loading />;
   } else {
     // Create table rows dinamically when products are loaded
-    let rows = createTableRows(products, storeInfo, smartContractContext);
+    let rows = createTableRows(
+      products,
+      smartContractContext,
+      routeToVerifyPage
+    );
 
     return (
       <React.Fragment>

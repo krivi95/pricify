@@ -5,6 +5,7 @@ import React from "react";
 import AdminHomeScreen from "./screens/AdminHomeScreen";
 import StoreHomeScreen from "./screens/StoreHomeScreen";
 import VerifyPriceScreenDemo from "./screens/VerifyPriceScreenDemo";
+import VerifyPriceScreen from "./screens/VerifyPriceScreen";
 import SignIn from "./components/landingpage/SignIn";
 import SignUp from "./components/landingpage/SignUp";
 import Home from "./components/landingpage/Home";
@@ -28,6 +29,10 @@ export default function App() {
           <Route
             path="/demo/verify/:storeId/:productId"
             component={VerifyPriceScreenDemo}
+          />
+          <Route
+            path="/verify/:storeId/:productId"
+            component={VerifyPriceScreen}
           />
           <PrivateRoute path="/admin" component={AdminHomeScreen} />
           <PrivateRoute path="/store" component={StoreHomeScreen} />

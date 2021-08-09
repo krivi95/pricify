@@ -56,7 +56,7 @@ const styles = (theme) => ({
   },
 });
 
-function VerifyPriceScreenDemo(props) {
+function VerifyPriceScreen(props) {
   // material-ui styles
   const { classes } = props;
 
@@ -202,4 +202,4 @@ function VerifyPriceScreenDemo(props) {
   );
 }
 
-export default withRoot(withStyles(styles)(VerifyPriceScreenDemo));
+export default withRoot(withStyles(styles)(VerifyPriceScreen));
