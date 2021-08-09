@@ -1,5 +1,5 @@
 // ReactJS components
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
 // MaterialUI components
@@ -17,6 +17,9 @@ import Typography from "../components/landingpage/modules/components/Typography"
 import AppFooter from "../components/landingpage/modules/views/AppFooter";
 import AppAppBar from "../components/landingpage/modules/views/AppAppBar";
 import withRoot from "../components/landingpage/modules/withRoot";
+import { SmartContractContext } from "../context/SmartContractContext";
+import LoadContract from "../components/LoadContract";
+import { isoCurrencyMappingRevert } from "../components/currencies";
 
 // Plotly
 import Plot from "react-plotly.js";
@@ -37,6 +40,7 @@ const styles = (theme) => ({
   },
   paper: {
     backgroundColor: "#fbf3fb",
+    padding: 25,
   },
   item: {
     display: "flex",
@@ -63,7 +67,11 @@ function VerifyPriceScreen(props) {
   // Get url parameters
   let { storeId, productId } = useParams();
 
-  // hook states
+  // Smart contract context (after connecting MetaMast it should be loaded)
+  const smartContractContext = useContext(SmartContractContext);
+
+  // Hook states
+  const [isLoading, setIsLoading] = useState(true);
   const [productName, setProductName] = useState("");
   const [storeName, setStoreName] = useState("");
   const [currentPrice, setCurrentPrice] = useState(null);
@@ -75,26 +83,88 @@ function VerifyPriceScreen(props) {
   const [priceAmounts, setPriceAmounts] = useState(false);
 
   useEffect(() => {
-    setProductName("Mastering Ethereum book");
-    setStoreName("Online book seller");
-    setCurrentPrice(39);
-    setOldPrice(49);
-    setCurrency("EUR");
-    if (currentPrice != null && oldPrice != null) {
-      setPriceDifference(
-        ((100 * (oldPrice - currentPrice)) / oldPrice).toFixed(2)
-      );
+    async function loadData() {
+      // Read store info from the StoreManager contract (getMyStoreInfo method)
+      if (smartContractContext.contractInfo.storeManager) {
+        try {
+          let item =
+            await smartContractContext.contractInfo.storeManager.methods
+              .getItemInfo(storeId, productId)
+              .call();
+
+          // Update state (most recent product info)
+          setProductName(item[2]);
+          setCurrentPrice(item[3]);
+          setCurrency(isoCurrencyMappingRevert[parseInt(item[1])]);
+
+          // Getting the item's historical prices
+          let priceChangeDates = [];
+          let prices = [];
+          let numOfPriceChanges = item[4];
+          for (
+            let priceIndex = 0;
+            priceIndex < numOfPriceChanges;
+            priceIndex++
+          ) {
+            let priceRecord =
+              await smartContractContext.contractInfo.storeManager.methods
+                .getPriceForItemAtIndex(storeId, productId, priceIndex)
+                .call();
+
+            // Add price
+            prices.push(parseInt(priceRecord[0]));
+
+            // Add date
+            let utcSeconds = parseInt(priceRecord[1]);
+            let utcMilliseconds = new Date(0); // The 0 there is the key, which sets the date to the epoch
+            utcMilliseconds = utcMilliseconds.setUTCSeconds(utcSeconds);
+            priceChangeDates.push(new Date(utcMilliseconds));
+          }
+
+          // Getting the previous price and calculating recent price change
+          let currentPrice = item[3];
+          let oldPrice = null;
+          if (numOfPriceChanges - 2 >= 0) {
+            oldPrice = prices[numOfPriceChanges - 2];
+            setOldPrice(oldPrice);
+          }
+          if (currentPrice != null && oldPrice != null) {
+            setPriceDifference(
+              ((100 * (oldPrice - currentPrice)) / oldPrice).toFixed(2)
+            );
+          }
+
+          // Updating the state (historical price data for the plots)
+          setPriceDates(priceChangeDates);
+          setPriceAmounts(prices);
+
+          // Geting the store info
+          // (for getting the store name)
+          let storeInfo =
+            await smartContractContext.contractInfo.storeManager.methods
+              .getStoreInfoById(storeId)
+              .call();
+          setStoreName(storeInfo[1]);
+        } catch (error) {
+          console.log(error.message);
+          alert(error.message);
+          return;
+        }
+
+        setIsLoading(false);
+      } else {
+        alert(
+          "MetaMask hasn't been connected. Please conenct you're MetaMask wallet on home page and then continue"
+        );
+        return;
+      }
     }
-  }, [currentPrice, oldPrice]);
+
+    loadData();
+  }, [smartContractContext]);
 
   function seePriceHistory() {
     setShowPrices(!showPrices);
-    setPriceDates([
-      "2020-10-04 22:23:00",
-      "2020-11-04 22:23:00",
-      "2020-12-04 22:23:00",
-    ]);
-    setPriceAmounts([69, 49, 39]);
   }
 
   // calculating relative price change
@@ -115,91 +185,142 @@ function VerifyPriceScreen(props) {
     );
   }
 
-  return (
-    <React.Fragment>
-      <AppAppBar />
-      <section className={classes.root}>
-        <Container className={classes.container}>
-          <Typography variant="h3" gutterBottom marked="center" align="center">
-            <span style={{ fontWeight: "lighter", fontFamily: "monospace" }}>
-              Verify the price
-            </span>
-          </Typography>
-          <Grid container spacing={5}>
-            <Grid item xs={12} md={2}></Grid>
-            <Grid item xs={12} md={8}>
-              <Paper elevation={3} className={classes.paper}>
-                <div className={classes.item}>
-                  <Typography variant="h5" align="center">
-                    {productName}
-                  </Typography>
-                  <Typography variant="subtitle1" align="center">
-                    Store: {storeName}
-                  </Typography>
-                </div>
-                <Divider variant="middle" />
-                <div className={classes.item}>
-                  <Typography variant="h6" align="center">
-                    Current price: {currentPrice} {currency}
-                  </Typography>
-                  <Typography variant="subtitle1" align="center">
-                    (Old price: {oldPrice} {currency})
-                  </Typography>
-                  <Typography variant="h6" align="center">
-                    Price change:&nbsp;
-                    {pnlInfo}
-                  </Typography>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    size="large"
-                    className={classes.button}
-                    component="a"
-                    onClick={seePriceHistory}
+  if (isLoading) {
+    return (
+      <React.Fragment>
+        <AppAppBar />
+        <section className={classes.root}>
+          <Container className={classes.container} height={800}>
+            <Typography
+              variant="h3"
+              gutterBottom
+              marked="center"
+              align="center"
+            >
+              <span style={{ fontWeight: "lighter", fontFamily: "monospace" }}>
+                Verify the price
+              </span>
+            </Typography>
+            <Grid container spacing={5}>
+              <Grid item xs={12} md={2}></Grid>
+              <Grid item xs={12} md={8}>
+                <Paper elevation={3} className={classes.paper} height={800}>
+                  <Typography
+                    variant="subtitle2"
+                    gutterBottom
+                    marked="center"
+                    align="center"
                   >
-                    See price history
-                  </Button>
-                </div>
-                <div className={classes.item}>
-                  {showPrices && (
-                    <div>
-                      <Typography variant="h5" align="center">
-                        Historical price changes
-                      </Typography>
-                      <Divider variant="middle" />
-                      <div className={classes.item}>
-                        <Paper elevation={1}>
-                          <Plot
-                            data={[
-                              {
-                                x: priceDates,
-                                y: priceAmounts,
-                                type: "scatter",
-                                fill: "tozeroy",
-                                mode: "lines+markers",
-                                marker: { color: "pink" },
-                              },
-                            ]}
-                            layout={{
-                              width: 520,
-                              height: 340,
-                              title: "Price changes over time",
-                            }}
-                          />
-                        </Paper>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Paper>
+                    <span
+                      style={{ fontWeight: "lighter", fontFamily: "monospace" }}
+                    >
+                      Before you can verify the product discount and price
+                      history, please connect your MetaMask wallet to Pricify
+                      DApp:
+                    </span>
+                  </Typography>
+                  <LoadContract />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={2}></Grid>
             </Grid>
-            <Grid item xs={12} md={2}></Grid>
-          </Grid>
-        </Container>
-      </section>
-      <AppFooter />
-    </React.Fragment>
-  );
+          </Container>
+        </section>
+        <AppFooter />
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <AppAppBar />
+        <section className={classes.root}>
+          <Container className={classes.container}>
+            <Typography
+              variant="h3"
+              gutterBottom
+              marked="center"
+              align="center"
+            >
+              <span style={{ fontWeight: "lighter", fontFamily: "monospace" }}>
+                Verify the price
+              </span>
+            </Typography>
+            <Grid container spacing={5}>
+              <Grid item xs={12} md={2}></Grid>
+              <Grid item xs={12} md={8}>
+                <Paper elevation={3} className={classes.paper}>
+                  <div className={classes.item}>
+                    <Typography variant="h5" align="center">
+                      {productName}
+                    </Typography>
+                    <Typography variant="subtitle1" align="center">
+                      Store: {storeName}
+                    </Typography>
+                  </div>
+                  <Divider variant="middle" />
+                  <div className={classes.item}>
+                    <Typography variant="h6" align="center">
+                      Current price: {currentPrice} {currency}
+                    </Typography>
+                    <Typography variant="subtitle1" align="center">
+                      (Old price: {oldPrice} {currency})
+                    </Typography>
+                    <Typography variant="h6" align="center">
+                      Price change:&nbsp;
+                      {pnlInfo}
+                    </Typography>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      size="large"
+                      className={classes.button}
+                      component="a"
+                      onClick={seePriceHistory}
+                    >
+                      See price history
+                    </Button>
+                  </div>
+                  <div className={classes.item}>
+                    {showPrices && (
+                      <div>
+                        <Typography variant="h5" align="center">
+                          Historical price changes
+                        </Typography>
+                        <Divider variant="middle" />
+                        <div className={classes.item}>
+                          <Paper elevation={1}>
+                            <Plot
+                              data={[
+                                {
+                                  x: priceDates,
+                                  y: priceAmounts,
+                                  type: "scatter",
+                                  fill: "tozeroy",
+                                  mode: "lines+markers",
+                                  marker: { color: "pink" },
+                                },
+                              ]}
+                              layout={{
+                                width: 520,
+                                height: 340,
+                                title: "Price changes over time",
+                              }}
+                            />
+                          </Paper>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={2}></Grid>
+            </Grid>
+          </Container>
+        </section>
+        <AppFooter />
+      </React.Fragment>
+    );
+  }
 }
 
 export default withRoot(withStyles(styles)(VerifyPriceScreen));
