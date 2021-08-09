@@ -61,7 +61,6 @@ function NewProduct() {
     price: "",
     currency: "USD",
   });
-  const [currency, setCurrency] = useState("EUR");
 
   const toggleForm = () => {
     /**

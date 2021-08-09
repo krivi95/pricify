@@ -1,6 +1,5 @@
 // ReactJS components
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 
 // MaterialUI components
 import { withStyles } from "@material-ui/core/styles";
@@ -59,9 +58,6 @@ const styles = (theme) => ({
 function VerifyPriceScreenDemo(props) {
   // material-ui styles
   const { classes } = props;
-
-  // Get url parameters
-  let { storeId, productId } = useParams();
 
   // hook states
   const [productName, setProductName] = useState("");

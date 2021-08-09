@@ -17,7 +17,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import IconButton from "@material-ui/core/IconButton";
-import CreateIcon from "@material-ui/icons/Create";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -71,7 +70,6 @@ function createTableRows(allProducts, smartContractContext, routeToVerifyPage) {
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [storeInfo, setStoreInfo] = useState(null);
   const [products, setProducts] = useState(null);
   const smartContractContext = useContext(SmartContractContext);
   const history = useHistory();
@@ -99,11 +97,6 @@ function Home() {
             await smartContractContext.contractInfo.storeManager.methods
               .getMyStoreInfo()
               .call({ from: smartContractContext.contractInfo.accounts[0] });
-          setStoreInfo({
-            storeId: storeInfo[0],
-            name: storeInfo[1],
-            numOfItems: storeInfo[2],
-          });
 
           // Getting all the items from the store
           let products = [];
