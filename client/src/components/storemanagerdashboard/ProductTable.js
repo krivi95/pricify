@@ -4,8 +4,9 @@ import React, { useState, useEffect, useContext } from "react";
 // Local ReactJS components
 import { default as CustomTypography } from "../landingpage/modules/components/Typography";
 import { SmartContractContext } from "../../context/SmartContractContext";
-import Loading from "../Loading";
 import { isoCurrencyMappingRevert } from "../currencies";
+import Loading from "../Loading";
+import UpdatePrice from "./UpdatePrice";
 
 //  Material-UI imports
 import { Box } from "@material-ui/core";
@@ -21,7 +22,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import Tooltip from "@material-ui/core/Tooltip";
 import { red } from "@material-ui/core/colors";
 
-function createTableRows(allProducts) {
+function createTableRows(allProducts, storeInfo, smartContractContext) {
   let tableRows = [];
   for (let key in allProducts) {
     tableRows.push(
@@ -44,17 +45,10 @@ function createTableRows(allProducts) {
           </Tooltip>
         </TableCell>
         <TableCell>
-          <Tooltip title="Set a new price for the item">
-            <IconButton
-              color="primary"
-              aria-label="add to shopping cart"
-              size="small"
-            >
-              <p style={{ color: red[500] }}>Update price</p>
-              &nbsp;
-              <CreateIcon style={{ color: red[500] }} />
-            </IconButton>
-          </Tooltip>
+          <UpdatePrice
+            productId={allProducts[key].id}
+            smartContractContext={smartContractContext}
+          />
           <Tooltip title="See more product details">
             <IconButton
               color="primary"
@@ -133,7 +127,7 @@ function Home() {
     return <Loading />;
   } else {
     // Create table rows dinamically when products are loaded
-    let rows = createTableRows(products);
+    let rows = createTableRows(products, storeInfo, smartContractContext);
 
     return (
       <React.Fragment>
