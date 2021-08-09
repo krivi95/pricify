@@ -14,6 +14,12 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import IconButton from "@material-ui/core/IconButton";
+import CreateIcon from "@material-ui/icons/Create";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import Tooltip from "@material-ui/core/Tooltip";
+import { red } from "@material-ui/core/colors";
 
 function createTableRows(allProducts) {
   let tableRows = [];
@@ -22,10 +28,43 @@ function createTableRows(allProducts) {
       <TableRow key={key}>
         <TableCell>{allProducts[key].id}</TableCell>
         <TableCell>{allProducts[key].name}</TableCell>
-        <TableCell>{allProducts[key].currentPrice} {allProducts[key].currency}</TableCell>
-        <TableCell>{allProducts[key].numberOfPrices}</TableCell>
-        <TableCell>TODO</TableCell>
-        <TableCell>TODO</TableCell>
+        <TableCell align="right">
+          {allProducts[key].currentPrice} {allProducts[key].currency}
+        </TableCell>
+        <TableCell align="right">{allProducts[key].numberOfPrices}</TableCell>
+        <TableCell align="right">
+          <Tooltip title="Download QR code for varifying the product price">
+            <IconButton
+              color="primary"
+              aria-label="add to shopping cart"
+              size="small"
+            >
+              <GetAppIcon style={{ color: red[500] }} />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+        <TableCell>
+          <Tooltip title="Set a new price for the item">
+            <IconButton
+              color="primary"
+              aria-label="add to shopping cart"
+              size="small"
+            >
+              <p style={{ color: red[500] }}>Update price</p>
+              &nbsp;
+              <CreateIcon style={{ color: red[500] }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="See more product details">
+            <IconButton
+              color="primary"
+              aria-label="add to shopping cart"
+              size="small"
+            >
+              <MoreVertIcon style={{ color: red[500] }} />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
       </TableRow>
     );
   }
@@ -127,10 +166,10 @@ function Home() {
                     <b>Number of price changes</b>
                   </TableCell>
                   <TableCell>
-                    <b>Actions</b>
+                    <b>Generate QR code</b>
                   </TableCell>
                   <TableCell>
-                    <b>QR</b>
+                    <b>Actions</b>
                   </TableCell>
                 </TableRow>
               </TableHead>
