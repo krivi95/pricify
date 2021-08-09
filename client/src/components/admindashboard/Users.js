@@ -182,6 +182,7 @@ function Users() {
   if (isLoading) {
     return <Loading />;
   } else {
+    // Create table rows dinamically when users are loaded
     let rows = createTableRows(users, createNewStore, activateOrDeactiveteUser);
 
     return (

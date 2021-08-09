@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // Local ReactJS components
 import { default as CustomTypography } from "../landingpage/modules/components/Typography";
 import { SmartContractContext } from "../../context/SmartContractContext";
-import isoCurrencyMapping from "../currencies";
+import { isoCurrencyMapping } from "../currencies";
 
 //  Material-UI imports
 import { Box } from "@material-ui/core";
@@ -138,7 +138,7 @@ function NewProduct() {
           >
             <div>
               <span style={{ fontWeight: "lighter", fontFamily: "monospace" }}>
-                New product:
+                Add new product:
               </span>
             </div>
             <IconButton onClick={toggleForm}>
@@ -181,7 +181,10 @@ function NewProduct() {
                   label="Price"
                   variant="outlined"
                   onChange={(e) =>
-                    setInputData({ ...inputData, price: parseInt(e.target.value) })
+                    setInputData({
+                      ...inputData,
+                      price: parseInt(e.target.value),
+                    })
                   }
                 />
                 <TextField

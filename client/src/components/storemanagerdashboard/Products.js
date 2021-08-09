@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 // Local ReactJS components
 import { default as CustomTypography } from "../landingpage/modules/components/Typography";
 import NewProduct from "./NewProduct";
+import ProductTable from "./ProductTable";
 
 //  Material-UI imports
 import { Box } from "@material-ui/core";
@@ -38,16 +39,7 @@ function Products() {
           &nbsp;
           <Divider />
           &nbsp;
-          <CustomTypography
-            variant="h5"
-            gutterBottom
-            marked="center"
-            align="center"
-          >
-            <span style={{ fontWeight: "lighter", fontFamily: "monospace" }}>
-              List of all products:
-            </span>
-          </CustomTypography>
+          <ProductTable />
         </Box>
       </Box>
     </React.Fragment>
