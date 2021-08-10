@@ -62,6 +62,11 @@ function createTableRows(allProducts, smartContractContext, routeToVerifyPage) {
           {allProducts[key].currentPrice} {allProducts[key].currency}
         </TableCell>
         <TableCell align="right">{allProducts[key].numberOfPrices}</TableCell>
+        <TableCell>
+          <Tooltip title="Link to verify the product's price and discount">
+            <a href={qrLinkToVerifyThePice}>{qrLinkToVerifyThePice}</a>
+          </Tooltip>
+        </TableCell>
         <TableCell align="right">
           <Tooltip title="Download QR code for varifying the product price">
             <IconButton
@@ -79,7 +84,7 @@ function createTableRows(allProducts, smartContractContext, routeToVerifyPage) {
               <QRCode
                 id={qrLinkToVerifyThePice}
                 value={qrLinkToVerifyThePice}
-                size={50}
+                size={35}
                 level={"H"}
                 includeMargin={true}
               />
@@ -221,6 +226,9 @@ function Home() {
                   </TableCell>
                   <TableCell>
                     <b>Number of price changes</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>Validation link</b>
                   </TableCell>
                   <TableCell>
                     <b>Download QR code</b>

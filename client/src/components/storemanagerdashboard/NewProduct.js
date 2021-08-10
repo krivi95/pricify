@@ -76,6 +76,7 @@ function NewProduct() {
 
     if (!inputData.name || !inputData.currency) {
       alert("Please enter a product name and price!");
+      return;
     }
 
     // Add new product through StoreManager contract (addNewItemToMyStore method)
