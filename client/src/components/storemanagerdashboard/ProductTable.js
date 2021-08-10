@@ -22,9 +22,38 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import Tooltip from "@material-ui/core/Tooltip";
 import { red } from "@material-ui/core/colors";
 
+// qrcode.react
+var QRCode = require("qrcode.react");
+
+function downloadQR(qrLinkToVerifyThePice, storeId, productId) {
+  /**
+   * Downloads the QR code, which has the link to verify page for the selected product
+   */
+
+  // Get hidden QR code html element (has bigger picture and better resolution for download)
+  const canvas = document.getElementById(qrLinkToVerifyThePice + "large");
+
+  const pngUrl = canvas
+    .toDataURL("image/png")
+    .replace("image/png", "image/octet-stream");
+  let downloadLink = document.createElement("a");
+  downloadLink.href = pngUrl;
+  downloadLink.download = `pricify-verify-store-${storeId}-product-${productId}.png`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+}
+
 function createTableRows(allProducts, smartContractContext, routeToVerifyPage) {
   let tableRows = [];
+  let baseUrl = window.location.href.split("/store")[0];
   for (let key in allProducts) {
+    let qrLinkToVerifyThePice =
+      baseUrl +
+      "/verify/" +
+      allProducts[key].storeId +
+      "/" +
+      allProducts[key].id;
     tableRows.push(
       <TableRow key={key}>
         <TableCell>{allProducts[key].id}</TableCell>
@@ -39,7 +68,30 @@ function createTableRows(allProducts, smartContractContext, routeToVerifyPage) {
               color="primary"
               aria-label="add to shopping cart"
               size="small"
+              onClick={() =>
+                downloadQR(
+                  qrLinkToVerifyThePice,
+                  allProducts[key].storeId,
+                  allProducts[key].id
+                )
+              }
             >
+              <QRCode
+                id={qrLinkToVerifyThePice}
+                value={qrLinkToVerifyThePice}
+                size={50}
+                level={"H"}
+                includeMargin={true}
+              />
+              <QRCode
+                hidden
+                id={qrLinkToVerifyThePice + "large"}
+                value={qrLinkToVerifyThePice}
+                size={500}
+                level={"H"}
+                includeMargin={true}
+              />
+              &nbsp;
               <GetAppIcon style={{ color: red[500] }} />
             </IconButton>
           </Tooltip>
@@ -171,7 +223,7 @@ function Home() {
                     <b>Number of price changes</b>
                   </TableCell>
                   <TableCell>
-                    <b>Generate QR code</b>
+                    <b>Download QR code</b>
                   </TableCell>
                   <TableCell>
                     <b>Actions</b>
