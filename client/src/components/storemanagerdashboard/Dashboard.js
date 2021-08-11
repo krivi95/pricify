@@ -28,10 +28,12 @@ import ListItemText from "@material-ui/core/ListItemText";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import HomeIcon from "@material-ui/icons/Home";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import PeopleIcon from "@material-ui/icons/People";
 
 // Menu components
 import Home from "./Home";
 import Stats from "./Stats";
+import Users from "./Users";
 
 // React Router
 import { Redirect } from "react-router-dom";
@@ -185,6 +187,11 @@ export default function Dashboard() {
     setSelectedMenuItemTitle("Store products");
   };
 
+  const viewUsers = () => {
+    setSelectedMenuItem(<Users />);
+    setSelectedMenuItemTitle("Manage store admins");
+  };
+
   // If admin user has logged out
   if (redirectPage != null) {
     return redirectPage;
@@ -257,6 +264,12 @@ export default function Dashboard() {
                   <ShoppingCartIcon />
                 </ListItemIcon>
                 <ListItemText primary="Products" />
+              </ListItem>
+              <ListItem button onClick={viewUsers}>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Users" />
               </ListItem>
             </div>
           </List>
