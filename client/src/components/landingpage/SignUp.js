@@ -63,14 +63,15 @@ function SignUp() {
      * Application superuser has to be created manually on Firebase.
      */
 
+    let newStoreFlag = "true" === userData.newStore;
     // Account metadata
-    if (Boolean(userData.newStore)) {
+    if (newStoreFlag) {
       userData.accountType = "storeOwner";
     } else {
       userData.accountType = "storeAdmin";
     }
     userData.activated = false;
-    userData.newStore = Boolean(userData.newStore);
+    userData.newStore = newStoreFlag;
 
     // Commit data to db
     firebase
@@ -92,7 +93,6 @@ function SignUp() {
       const firebaseUser = await firebase
         .auth()
         .createUserWithEmailAndPassword(userData.email, userData.password);
-      console.log(firebaseUser.user);
 
       // Write used data to db
       await firebaseWriteUserData(firebaseUser.user, userData);

@@ -20,11 +20,18 @@ import firebase from "../../firebase/firebase";
 // Local ReactJS components
 import { default as CustomTypography } from "../landingpage/modules/components/Typography";
 import { SmartContractContext } from "../../context/SmartContractContext";
+import { AuthContext } from "../../context/AuthContext";
 import Loading from "../Loading";
 
-function createTableRows(allUsers, createNewStore, activateOrDeactiveteUser) {
+function createTableRows(allUsers, activateOrDeactiveteUser) {
   let tableRows = [];
   for (let key in allUsers) {
+    // Skip store owner
+    // (Nobody should be allowed to remove that account)
+    if (allUsers[key].accountType == "storeOwner") {
+      continue;
+    }
+
     tableRows.push(
       <TableRow key={key}>
         <TableCell>{allUsers[key].email}</TableCell>
@@ -32,22 +39,6 @@ function createTableRows(allUsers, createNewStore, activateOrDeactiveteUser) {
         <TableCell>{allUsers[key].lastName}</TableCell>
         <TableCell>{allUsers[key].ethAddress}</TableCell>
         <TableCell>{allUsers[key].storeName}</TableCell>
-        <TableCell>
-          {allUsers[key].newStore ? (
-            <IconButton
-              color="primary"
-              aria-label="add to shopping cart"
-              size="small"
-              onClick={(event) => createNewStore(event, key, allUsers[key])}
-            >
-              <p style={{ color: green[500] }}>Create new store</p>
-              &nbsp;
-              <ShoppingCartIcon style={{ color: green[500] }} />
-            </IconButton>
-          ) : (
-            "Store already created"
-          )}
-        </TableCell>
         <TableCell>
           <IconButton
             color="primary"
@@ -79,6 +70,7 @@ function createTableRows(allUsers, createNewStore, activateOrDeactiveteUser) {
 function Users() {
   const [users, setUsers] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const currentUser = useContext(AuthContext);
   const smartContractContext = useContext(SmartContractContext);
 
   useEffect(() => {
@@ -86,89 +78,60 @@ function Users() {
       /**
        * Getting the users from database
        */
-      var usersRef = firebase.database().ref("users");
-      await usersRef.on("value", (snapshot) => {
-        const allUsers = snapshot.val();
-        setUsers(allUsers);
-        setIsLoading(false);
+
+      // GEtting the admin's store name
+      let storeName = null;
+      var firebaseUserId = currentUser.currentUser.uid;
+      var userRef = firebase.database().ref("users/" + firebaseUserId);
+      await userRef.once("value", (snapshot) => {
+        storeName = snapshot.val().storeName;
       });
+
+      // Getting the admins for the store
+      var usersRef = firebase.database().ref("users");
+      await usersRef
+        .orderByChild("storeName")
+        .equalTo(storeName)
+        .on("value", (snapshot) => {
+          const allUsers = snapshot.val();
+          setUsers(allUsers);
+          setIsLoading(false);
+        });
     }
 
     getUsers();
   }, []);
 
-  const createStoreOnBlockchain = async (storeName, storeOwner) => {
+  const activateOrDeactiveteUser = async (event, userId, user) => {
     /**
-     * Creates a new store on the blockchain through StoreManager cotracts
-     * (only contract owner is able to create a store for a new user, the one who deployed the contract)
+     * Function that activates or deactivates user's access to the system both in database and smart contract
      */
+
+    // Change the activation status flag
+    user.activated = !user.activated;
+
+    // Add оr remove user's eth address to the store to be an admin to manage the products
     if (smartContractContext.contractInfo.storeManager) {
-      await smartContractContext.contractInfo.storeManager.methods
-        .createNewStore(storeName, storeOwner)
-        .send({ from: smartContractContext.contractInfo.accounts[0] });
+      try {
+        user.activated
+          ? await smartContractContext.contractInfo.storeManager.methods
+              .addAdminToMyStore(user.ethAddress)
+              .send({ from: smartContractContext.contractInfo.accounts[0] })
+          : console.log("TODO:removeAdminFromMyStore");
+        // : await smartContractContext.contractInfo.storeManager.methods
+        //     .removeAdminFromMyStore(user.ethAddress)
+        //     .send({ from: smartContractContext.contractInfo.accounts[0] });
+      } catch (error) {
+        console.log(error.message);
+        alert(error.message);
+        return;
+      }
     } else {
       alert(
         "MetaMask hasn't been connected. Please conenct you're MetaMask wallet on home page and then continue"
       );
       return;
     }
-  };
-
-  const createNewStore = async (event, userId, user) => {
-    /**
-     * Function that activates or deactivates user's access to the system
-     */
-
-    event.preventDefault();
-
-    // Change the activation status flag
-    user.newStore = false;
-
-    // Creating a new store record on smart contract
-    // Contract's owner creates store (the onle who deployed the contracts)
-    // If there is some error when interacting with smart contract, abort store creation
-    try {
-      await createStoreOnBlockchain(user.storeName, user.ethAddress);
-    } catch (error) {
-      console.log(error);
-      alert(
-        "There was an arror when tried to create new store on blockchain: " +
-          error.message
-      );
-      return;
-    }
-
-    // Create a new store record in database
-    var postListRef = firebase.database().ref("stores");
-    var newPostRef = postListRef.push();
-    newPostRef.set({
-      ownerUserId: userId,
-      ownerEmail: user.email,
-      ownerEthAddress: user.ethAddress,
-      name: user.storeName,
-      numOfItems: 0, // no items yet in the store
-      numOfStoreAdmins: 1, // currently only store owner
-      creationTime: Date().toLocaleString(),
-    });
-
-    // Update user record in the database
-    const requessRef = firebase.database().ref("users").child(userId);
-    await requessRef.update({
-      newStore: user.newStore,
-      storeId: newPostRef.key,
-    });
-
-    // Diplay action message
-    alert("Successfully created store on smart contarct for new user!");
-  };
-
-  const activateOrDeactiveteUser = async (event, userId, user) => {
-    /**
-     * Function that activates or deactivates user's access to the system
-     */
-
-    // Change the activation status flag
-    user.activated = !user.activated;
 
     // Update user record in the database
     const requessRef = firebase.database().ref("users").child(userId);
@@ -176,15 +139,19 @@ function Users() {
       activated: user.activated,
     });
     user.activated
-      ? alert("Successfully activated user's account!")
-      : alert("Deactivated user's request!");
+      ? alert(
+          "Successfully activated user's account and added as store admin to the store on blockchain!"
+        )
+      : alert(
+          "Deactivated user's account and removed as store admin to the store on blockchain!"
+        );
   };
 
   if (isLoading) {
     return <Loading />;
   } else {
     // Create table rows dinamically when users are loaded
-    let rows = createTableRows(users, createNewStore, activateOrDeactiveteUser);
+    let rows = createTableRows(users, activateOrDeactiveteUser);
 
     return (
       <React.Fragment>
@@ -217,9 +184,6 @@ function Users() {
               </TableCell>
               <TableCell>
                 <b>Store name</b>
-              </TableCell>
-              <TableCell>
-                <b>New store</b>
               </TableCell>
               <TableCell>
                 <b>Activated</b>
