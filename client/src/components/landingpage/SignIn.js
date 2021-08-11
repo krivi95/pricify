@@ -86,7 +86,6 @@ function SignIn() {
 
       // Check if user's account is active
       if (!activated) {
-        console.log("SIGNIN");
         history.push("/store-welcome");
         return;
       }
