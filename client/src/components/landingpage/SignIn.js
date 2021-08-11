@@ -68,6 +68,7 @@ function SignIn() {
 
       // Determining account type
       let accountType = null;
+      let activated = null;
       const uid = firebaseUser.user.uid;
       await firebase
         .database()
@@ -75,10 +76,18 @@ function SignIn() {
         .once("value", (snap) => {
           const userData = snap.val();
           accountType = userData.accountType;
+          activated = userData.activated;
         });
 
       if (!accountType) {
         alert("Couldn't login. Auth service not working!");
+        return;
+      }
+
+      // Check if user's account is active
+      if (!activated) {
+        console.log("SIGNIN");
+        history.push("/store-welcome");
         return;
       }
 
@@ -102,7 +111,7 @@ function SignIn() {
   if (currentUser) {
     let accountType = null;
     const uid = currentUser.uid;
-    
+
     firebase
       .database()
       .ref("users/" + uid)
@@ -115,7 +124,6 @@ function SignIn() {
           history.push("/store");
         }
       });
-    
   }
 
   return (
