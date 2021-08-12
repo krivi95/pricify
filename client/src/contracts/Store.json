@@ -7678,7 +7678,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2021-02-18T15:22:23.396Z",
+  "updatedAt": "2021-08-12T20:22:24.618Z",
   "devdoc": {
     "details": "Store contract for storing items and their prices.",
     "kind": "dev",

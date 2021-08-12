@@ -5049,7 +5049,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2021-02-18T15:22:23.387Z",
+  "updatedAt": "2021-08-12T20:22:24.609Z",
   "devdoc": {
     "details": "Item contract for storing item related information.",
     "kind": "dev",
