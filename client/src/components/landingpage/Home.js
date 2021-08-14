@@ -4,6 +4,7 @@ import ProductSmokingHero from './modules/views/ProductSmokingHero';
 import AppFooter from './modules/views/AppFooter';
 import ProductHero from './modules/views/ProductHero';
 import ProductValues from './modules/views/ProductValues';
+import ProductDemo from './modules/views/ProductDemo';
 import ProductHowItWorks from './modules/views/ProductHowItWorks';
 import ProductCTA from './modules/views/ProductCTA';
 import AppAppBar from './modules/views/AppAppBar';
@@ -17,6 +18,7 @@ function Index() {
       <ProductValues />
       <ProductCategories />
       <ProductHowItWorks />
+      <ProductDemo />
       <ProductSmokingHero />
       <ProductCTA />
       <AppFooter />
