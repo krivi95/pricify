@@ -59,3 +59,29 @@ In the `/test` dir there are tests for the smart contracts. After testing locall
 
 
 ## How to run?
+
+### Configuration
+
+Config:
+- In the `truffle-config.js` you may see and change the Ethereum networks.
+- In the root dir rename the `.env.template` to `.env` and add your mnemonic.
+- In the `/client` dir rename the `.env.template` to `.env` and set Firebase credentials and config.
+
+Requirements: 
+- NodeJS version: `v10.15.0`.  
+- Solidity compiler version: `v0.6.6`.  
+- Truffle: `v5.1.40`.
+
+### Rinning
+
+Setting up and running the application :
+- Install truffle:  `npm install truffle -g`
+- Install npm moduls: 
+  1. `npm install` in the root directory (for truffle and unit tests)
+  2. `cd client` & `npm install` (for ReactJS app)
+- Start `Ganache` and update truffle-config file if necessary with the network parameters.
+- Compile and migrate smart contracts to the local blockchain (from truffle console): `truffle migrate --network "development/ganache-local" --reset`.
+- Start react app: `cd client` & `npm start`.
+
+To test the smart contracts:
+- In the root directory: `truffle test`.
