@@ -2,13 +2,13 @@
 
 ## Introduction
 
-This repository contains a system for `storing prices of consumer goods and services` on a `Ethereum` blockchain.
+This repository contains a system for `storing prices of consumer goods and services` 📈. Price history is stored on a `Ethereum` blockchain.
 The Pricify system provides a solution to a `problem of fake sales and prices` that consumers are facing while making purchasing decisions.
 
-This system aims to fix the problem of intransparent sales and prices, bring the transparency, and help the consumers make `better economic decisions` while shopping.
+This system aims to fix the problem of intransparent sales and prices, bring the transparency, and help the consumers make `better economic decisions` while shopping 🛍️🛒.
 
 `Price history of items/services is stored and recorded on Ethereum blockchain via smart contracts` ([more about smart contracts](#smart-contracts)). By storing the price updates and changes
-on a public blockchain, anyone can verify the validity of the current discount. That will disable the merchants from manipulating the prices.
+on a public blockchain, anyone can verify the validity of the current discount for the item/service. That will disenable the merchants from manipulating the prices.
 
 
 More info:
