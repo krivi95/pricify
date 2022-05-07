@@ -49,9 +49,11 @@ For the MVP of this system [Ethereum](https://ethereum.org/en/) blockchain was u
 
 ## Smart Contracts
 
-Ropsten
-Metamask
-OpenZeppelin
+Smart contracts are in the `/contracts` dir. They are implemented in [Solidity](https://docs.soliditylang.org/en/v0.8.13/). Some of the smart contracts are used from [OpenZeppelin](https://openzeppelin.com/):
+- [Access Control](https://docs.openzeppelin.com/contracts/4.x/access-control)
+- [Ownable](https://docs.openzeppelin.com/contracts/2.x/api/ownership#Ownable)
+
+In the `/test` dir there are tests for the smart contracts. After testing locally, contracts are deployed to the [Ropsten testnet](https://ropsten.etherscan.io/).
 
 ![image](https://user-images.githubusercontent.com/30963594/167254919-611c265d-4472-4b80-b4c4-467b8083d455.png)
 
