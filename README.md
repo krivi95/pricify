@@ -1,4 +1,4 @@
-# Pricify
+# Pricify - System for storing prices of consumer goods on the blockchain
 
 ## Introduction
 
@@ -12,7 +12,7 @@ on a public blockchain, anyone can verify the validity of the current discount. 
 
 
 More info:
-- [Pricify system (slides)](https://github.com/krivi95/pricify/files/8645068/Pricify.system.slides.pdf)
+- [Pricify slides](https://github.com/krivi95/pricify/files/8645068/Pricify.system.slides.pdf)
 - [Pricify website](https://www.pricify.me/)
 
 ![Screenshot 2022-05-07 at 14 01 28](https://user-images.githubusercontent.com/30963594/167253443-11b56f16-9056-476b-8b9d-f976ed8f8a7a.png)
@@ -21,7 +21,7 @@ This implementation was done as part of master thesis for the [Master's degree i
 
 ## Demo
 
-Consumers have a possibility to determine the real price of the item and to verify the validity of the advertised sales:
+`Consumers` have a possibility to determine the real price of the item and to verify the validity of the advertised sales:
 - In `physical stores` - by scanning the QR code on the item, which will redirect them to the web page for sales validation and price history
 - In `online stores` - by clicking the link for validating the price of the item; redirects to the same web page for sales validation and price history
 
@@ -30,9 +30,30 @@ https://user-images.githubusercontent.com/30963594/167253807-56206b2d-4f4d-43b9-
 
 
 
-## Architecture
+## Architecture and technologies
+
+### Technologies
+
+For the MVP of this system [Ethereum](https://ethereum.org/en/) blockchain was used. `Smart contracts` were implemented in [Solidity](https://docs.soliditylang.org/en/v0.8.13/). Other tools that are used for implementation and testing of smart contracts are [Ganache](https://trufflesuite.com/ganache/), [Truffle](https://trufflesuite.com/truffle/), [MetaMask wallet](https://metamask.io/). 
+
+`Frontend` web app that interacts with smart contracts is implemented in [ReactJS](https://reactjs.org/) using [Material UI](https://mui.com/) component library.
+
+`Backend` is serverless, utilizing services from:
+- `Firebase`: [Firebase Authentication](https://firebase.google.com/products/auth?gclid=Cj0KCQjwsdiTBhD5ARIsAIpW8CKLuiPUL4VLpYAYCMZJIW8tuymDIY3q0PLva-4ebC06kmlBfG6SoEwaAlWiEALw_wcB&gclsrc=aw.ds), [Firebase Realtime Database](https://firebase.google.com/products/realtime-database?gclid=Cj0KCQjwsdiTBhD5ARIsAIpW8CICYYfUKYzdLaeKW4tC6KhUWcOpib9Uv-eLdfm-a9VeGy45salhi8AaAjybEALw_wcB&gclsrc=aw.ds)
+- `AWS`: [Amplify](https://aws.amazon.com/amplify/), [Route 53](https://aws.amazon.com/route53/)
+- `Infura`: [Infura Ethereum API](https://infura.io/product/ethereum)
+
+### Sustem architecture overview
+![image](https://user-images.githubusercontent.com/30963594/167254897-2a57ec05-23f9-4f6d-8479-dfefcccf927d.png)
 
 
 ## Smart Contracts
+
+Ropsten
+Metamask
+OpenZeppelin
+
+![image](https://user-images.githubusercontent.com/30963594/167254919-611c265d-4472-4b80-b4c4-467b8083d455.png)
+
 
 ## How to run?
